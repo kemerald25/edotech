@@ -61,6 +61,15 @@ export type ResourceItem = {
   contributor?: string;
 };
 
+export type Project = {
+  title: string;
+  category: string;
+  description: string;
+  link: string;
+  builtBy: string;
+  tech?: string[];
+};
+
 export type FAQ = {
   question: string;
   answer: string;

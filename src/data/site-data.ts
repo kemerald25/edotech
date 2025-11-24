@@ -2,6 +2,7 @@ import {
   FAQ,
   Partner,
   Program,
+  Project,
   ResourceItem,
   TeamMember,
   TimelineItem,
@@ -293,6 +294,35 @@ export const resources: ResourceItem[] = [
   },
 ];
 
+export const communityProjects: Project[] = [
+  {
+    title: "Grid Festival Platform",
+    category: "Community",
+    description:
+      "Micro-site powering ticketing and live updates for Edo Tech Grid Festival.",
+    link: "https://grid.edotech.community",
+    builtBy: "Unity Ekeoba",
+    tech: ["Next.js", "Tailwind", "Vercel"],
+  },
+  {
+    title: "Civic Data Commons",
+    category: "Civic Tech",
+    description:
+      "Open dashboard aggregating municipal datasets for Edo innovators.",
+    link: "https://data.edotech.community",
+    builtBy: "Braimah Fadilat",
+    tech: ["Supabase", "Svelte", "Mapbox"],
+  },
+  {
+    title: "Paty Sprint Tracker",
+    category: "Programs",
+    description:
+      "Internal tool for scheduling, pairing, and measuring Paty sprint progress.",
+    link: "https://paty.edotech.community",
+    builtBy: "David Onotiemoria & Faith Iguma-Asaka",
+    tech: ["Next.js", "Prisma", "PlanetScale"],
+  },
+];
 export const faqs: FAQ[] = [
   {
     question: "Who can join the Edo Tech Community?",

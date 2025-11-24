@@ -1,8 +1,8 @@
-import { resources } from "@/data/site-data";
+import { resources, communityProjects } from "@/data/site-data";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { ResourceLibrary } from "@/components/resources/resource-library";
 import { ResourceSubmissionForm } from "@/components/resources/resource-submission-form";
 import { Library, Users } from "lucide-react";
+import { ResourceTabs } from "@/components/resources/resource-tabs";
 
 export const metadata = {
   title: "Resources",
@@ -48,9 +48,9 @@ export default function ResourcesPage() {
       <SectionHeading
         eyebrow="Explore"
         title="Search, filter, and download"
-        description="All cards include quick descriptions, contributors, and outbound links."
+        description="Toggle between living docs and Edo-built showcase projects."
       />
-      <ResourceLibrary items={resources} />
+      <ResourceTabs resources={resources} projects={communityProjects} />
 
       <SectionHeading
         eyebrow="Community"
