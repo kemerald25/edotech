@@ -1,0 +1,11 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nebula Capital">
+  <defs>
+    <linearGradient id="nebulaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6c24c9"/>
+      <stop offset="100%" stop-color="#f0b12e"/>
+    </linearGradient>
+  </defs>
+  <circle cx="60" cy="60" r="52" fill="url(#nebulaGradient)" opacity="0.9"/>
+  <path d="M35 60c0-13.8 11.2-25 25-25s25 11.2 25 25-11.2 25-25 25-25-11.2-25-25zm38-7-20 20-8-8" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

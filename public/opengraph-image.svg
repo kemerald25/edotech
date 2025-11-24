@@ -1,0 +1,20 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#05030A"/>
+  <rect x="80" y="80" width="1040" height="470" rx="48" fill="url(#paint0_linear)" fill-opacity="0.2" stroke="url(#paint1_linear)" stroke-width="2"/>
+  <text x="120" y="240" fill="#F4F4F6" font-family="Space Grotesk, sans-serif" font-size="72" font-weight="600">Edo Tech Community</text>
+  <text x="120" y="320" fill="#C9C9D0" font-family="Inter, sans-serif" font-size="32">Futurist builders shaping Edo State’s innovation economy</text>
+  <circle cx="1020" cy="180" r="100" stroke="#6C24C9" stroke-width="4"/>
+  <circle cx="1020" cy="180" r="60" stroke="#F0B12E" stroke-width="4"/>
+  <circle cx="1020" cy="180" r="20" fill="#F0B12E"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="80" y1="80" x2="1120" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6C24C9"/>
+      <stop offset="1" stop-color="#F0B12E"/>
+    </linearGradient>
+    <linearGradient id="paint1_linear" x1="80" y1="80" x2="1120" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6C24C9" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#F0B12E" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+</svg>
+

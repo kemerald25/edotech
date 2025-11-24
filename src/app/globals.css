@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --header-height: 4.5rem;
+  --grid-size: 40px;
+  --grid-color: rgba(255, 255, 255, 0.03);
+}
+
+body {
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  background-color: theme("colors.background");
+  color: theme("colors.foreground");
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-panel {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl;
+  box-shadow: 0 10px 50px rgba(6, 3, 20, 0.45);
+}
+
+.grid-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      transparent calc(var(--grid-size) - 1px),
+      var(--grid-color) 1px
+    ),
+    linear-gradient(
+      90deg,
+      transparent calc(var(--grid-size) - 1px),
+      var(--grid-color) 1px
+    );
+  background-size: var(--grid-size) var(--grid-size);
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #6c24c9 20%, #f0b12e 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.shimmer {
+  background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0.02),
+      rgba(255, 255, 255, 0.25),
+      rgba(255, 255, 255, 0.02)
+    )
+    0 0 / 200% 100%;
+}
+
+.fade-border {
+  position: relative;
+}
+
+.fade-border::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(108, 36, 201, 0.7),
+    rgba(240, 177, 46, 0.6)
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+}
