@@ -36,14 +36,16 @@ export function HubspotForm() {
     if (!hasConfig || !portalId || !formId) {
       return;
     }
+    const resolvedPortalId: string = portalId;
+    const resolvedFormId: string = formId;
 
     const scriptUrl = "https://js.hsforms.net/forms/embed/v2.js";
 
     function renderForm() {
       if (!window.hbspt) return;
       window.hbspt.forms.create({
-        portalId,
-        formId,
+        portalId: resolvedPortalId,
+        formId: resolvedFormId,
         target: "#hubspot-form",
         region: "na1",
         onFormReady: () => setState("ready"),
