@@ -57,18 +57,23 @@ const config: Config = {
           "50%": { transform: "translateY(-12px)" },
         },
         "pulse-glow": {
-          "0%, 100%": { opacity: 0.6, filter: "blur(18px)" },
-          "50%": { opacity: 1, filter: "blur(24px)" },
+          "0%, 100%": { opacity: "0.6", filter: "blur(18px)" },
+          "50%": { opacity: "1", filter: "blur(24px)" },
         },
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
+        },
+        "logo-marquee": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
         },
       },
       animation: {
         "float-slow": "float-slow 8s ease-in-out infinite",
         "pulse-glow": "pulse-glow 5s ease-in-out infinite",
         shimmer: "shimmer 2.5s linear infinite",
+        "logo-marquee": "logo-marquee 25s linear infinite",
       },
       backdropBlur: {
         xs: "2px",
