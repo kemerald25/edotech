@@ -1,37 +1,20 @@
 import { AnimatedCounter } from "@/components/animated-counter";
 import { HubspotForm } from "@/components/forms/hubspot-form";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { Button } from "@/components/ui/button";
 import { faqs, missionStats } from "@/data/site-data";
 import { CheckCircle2, Quote, Shield } from "lucide-react";
-
-const membershipTiers = [
-  {
-    name: "Explorer",
-    price: "Free",
-    description: "Community platform access, event invites, and the newsletter.",
-    benefits: ["Monthly salons", "Partner discounts", "Resource portal"],
-  },
-  {
-    name: "Builder",
-    price: "₦25k / quarter",
-    description: "Hands-on Paty cohorts with mentorship and tooling credits.",
-    benefits: ["Priority program slots", "Tooling stipends", "Mentor pairing"],
-    highlighted: true,
-  },
-  {
-    name: "Operator",
-    price: "Custom",
-    description: "For institutions backing Edo innovation at scale.",
-    benefits: ["Dedicated success partner", "Quarterly impact reviews", "Co-branded activations"],
-  },
-];
 
 const joiningBenefits = [
   "Hub access across Benin, Auchi, and remote pods",
   "Jobs + funding alerts curated weekly",
   "Accountability circles to ship your roadmap",
   "Community directory with verified skill tags",
+];
+
+const membershipHighlights = [
+  "Membership is 100% free—no dues or tiers.",
+  "Same-day access to events, labs, and resource drops.",
+  "Partner perks are shared with every verified member.",
 ];
 
 const quotes = [
@@ -42,7 +25,7 @@ const quotes = [
   },
   {
     quote:
-      "The Builder tier paired our civic lab with product designers that understood government constraints.",
+      "The Builder circle paired our civic lab with product designers that understood government constraints.",
     author: "Mary Asemota · Policy Lead",
   },
 ];
@@ -50,7 +33,7 @@ const quotes = [
 export const metadata = {
   title: "Join Us",
   description:
-    "HubSpot-powered onboarding with tiered benefits, FAQs, and social proof for the Edo Tech Community.",
+    "Free membership onboarding with HubSpot, FAQs, and social proof for the Edo Tech Community.",
 };
 
 export default function JoinPage() {
@@ -66,8 +49,8 @@ export default function JoinPage() {
               Membership built for futurists, founders, and civic operators
             </h1>
             <p className="mt-4 text-lg text-neutral-200">
-              Pick a tier, complete the HubSpot form, and our membership stewards
-              will guide you through orientation within 72 hours.
+              Complete the HubSpot form and our membership stewards will guide
+              you through orientation within 72 hours—no fees, no paywalls.
             </p>
             <div className="mt-6 flex flex-wrap gap-4 text-sm text-neutral-300">
               {joiningBenefits.map((benefit) => (
@@ -93,31 +76,17 @@ export default function JoinPage() {
 
       <SectionHeading
         eyebrow="Membership"
-        title="Choose your tier"
-        description="All members commit to the Edo Tech community code of conduct."
+        title="Access is free forever"
+        description="One community, shared benefits. Here’s what every member unlocks."
       />
       <div className="grid gap-6 md:grid-cols-3">
-        {membershipTiers.map((tier) => (
+        {membershipHighlights.map((highlight) => (
           <article
-            key={tier.name}
-            className={`rounded-3xl border p-6 ${tier.highlighted ? "border-secondary/60 bg-secondary/10 shadow-glow" : "border-white/10 bg-white/5"}`}
+            key={highlight}
+            className="rounded-3xl border border-white/10 bg-white/5 p-6 text-sm text-neutral-200"
           >
-            <div className="flex items-baseline justify-between">
-              <h3 className="text-2xl font-semibold">{tier.name}</h3>
-              <span className="text-sm text-neutral-400">{tier.price}</span>
-            </div>
-            <p className="mt-2 text-sm text-neutral-300">{tier.description}</p>
-            <ul className="mt-4 space-y-2 text-sm text-neutral-200">
-              {tier.benefits.map((benefit) => (
-                <li key={benefit} className="flex items-center gap-2">
-                  <Shield className="size-4 text-secondary" />
-                  {benefit}
-                </li>
-              ))}
-            </ul>
-            <Button className="mt-6 w-full" variant={tier.highlighted ? "secondary" : "primary"}>
-              Select {tier.name}
-            </Button>
+            <Shield className="mb-3 size-5 text-secondary" />
+            {highlight}
           </article>
         ))}
       </div>

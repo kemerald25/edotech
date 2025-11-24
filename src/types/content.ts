@@ -47,9 +47,9 @@ export type Program = {
 
 export type Partner = {
   name: string;
-  tier: "platinum" | "gold" | "silver";
   description: string;
   logo: string;
+  focusArea?: string;
   testimonial?: { quote: string; author: string };
 };
 

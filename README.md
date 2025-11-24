@@ -8,7 +8,7 @@ Modern, production-ready web experience for the Edo Tech Community. It blends a 
 - **Futurist UI system** using Tailwind CSS, custom palette, glassmorphism utilities, and reusable components (`Button`, `GlowCard`, `SectionHeading`).
 - **Motion everywhere** powered by Framer Motion (`MotionProvider`, scroll/hover transitions, animated counters).
 - **Markdown/MDX blog** sourced from `/content/blog/*.mdx` with gray-matter frontmatter, build-time generation, related posts, reading time, RSS feed, and SEO metadata.
-- **Dynamic pages** for About, Teams, Programs (with filtering + calendar + gallery), Partners (tiered display + testimonial carousel), Resources (search/filter + submission form), and Join (HubSpot embed, tiers, FAQ, social proof).
+- **Dynamic pages** for About, Teams, Programs (with filtering + calendar + gallery), Partners (collaborator grid + testimonial carousel), Resources (search/filter + submission form), and Join (HubSpot embed, FAQ, social proof).
 - **HubSpot integration** via typed, client-side embed component with loading/error/missing states.
 - **SEO toolkit** including structured data, sitemap, robots, per-page metadata, and Open Graph defaults.
 - **Accessibility + performance** patterns: semantic layout, focus rings, optimized images, next/font, and lazy motion loading.

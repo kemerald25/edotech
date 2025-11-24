@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -14,7 +15,6 @@ const navLinks = [
   { href: "/partners", label: "Partners" },
   { href: "/blog", label: "Blog" },
   { href: "/resources", label: "Resources" },
-  { href: "/join", label: "Join Us" },
 ];
 
 export function SiteHeader() {
@@ -32,47 +32,59 @@ export function SiteHeader() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300 h-[80px]",
-        scrolled ? "backdrop-blur-lg bg-background/80 border-b border-white/10" : "bg-transparent",
+        "fixed inset-x-0 top-0 z-50 h-[80px] transition-all duration-300",
+        scrolled
+          ? "backdrop-blur-lg bg-background/80 border-b border-white/10"
+          : "bg-transparent"
       )}
     >
-      <div className="mx-auto flex h-[var(--header-height)] max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="text-lg font-heading tracking-wide">
-          <span className="text-gradient font-semibold">Edo Tech</span>
-          <span className="text-neutral-400"> Community</span>
+      <div className="mx-auto flex h-[var(--header-height)] max-w-6xl items-center justify-between gap-6 px-6">
+        <Link href="/" className="flex items-center gap-3 text-lg font-heading tracking-wide">
+          <Image
+            src="/images/logo-white.svg"
+            alt="Edo Tech Community logo"
+            width={40}
+            height={40}
+            className="w-full"
+            priority
+          />
         </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-neutral-200 lg:flex">
+        <nav className="hidden flex-1 items-center justify-center gap-6 text-sm font-medium text-neutral-200 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={cn(
                 "transition hover:text-secondary",
-                pathname === link.href && "text-secondary",
+                pathname === link.href && "text-secondary"
               )}
             >
               {link.label}
             </Link>
           ))}
+        </nav>
+        <div className="flex items-center gap-3">
           <Link
             href="/join"
-            className="rounded-full bg-secondary px-4 py-2 text-background shadow-glow transition hover:-translate-y-0.5"
+            className="hidden md:block rounded-full bg-secondary px-4 py-2 text-background shadow-glow transition hover:-translate-y-0.5"
           >
             Join the Network
           </Link>
-        </nav>
-        <button
-          className="focus-ring rounded-full border border-white/10 p-2 lg:hidden"
-          aria-label="Toggle navigation menu"
-          onClick={() => setOpen((prev) => !prev)}
-        >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+          <button
+            className="focus-ring rounded-full border border-white/10 p-2 lg:hidden"
+            aria-label="Toggle navigation menu"
+            onClick={() => setOpen((prev) => !prev)}
+          >
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </div>
       <div
         className={cn(
           "lg:hidden",
-          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+          open
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
         )}
       >
         <div className="mx-4 mb-4 rounded-3xl border border-white/10 bg-background/95 p-6 shadow-glass">
@@ -83,7 +95,7 @@ export function SiteHeader() {
                 href={link.href}
                 className={cn(
                   "rounded-xl px-3 py-2 transition hover:bg-white/5",
-                  pathname === link.href && "bg-white/10 text-secondary",
+                  pathname === link.href && "bg-white/10 text-secondary"
                 )}
                 onClick={() => setOpen(false)}
               >
@@ -103,4 +115,3 @@ export function SiteHeader() {
     </header>
   );
 }
-

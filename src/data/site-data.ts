@@ -15,12 +15,14 @@ export const missionStats = [
 ];
 
 export const featuredLogos = [
-  "Andela",
-  "Flutterwave",
-  "Ingressive",
-  "Google",
-  "GitHub",
-  "AWS",
+  { name: "Benin Connect", image: "/images/bc.png" },
+  { name: "Diamund Labs", image: "/images/Diamund.png" },
+  { name: "Edo Innovators", image: "/images/edo-innov.png" },
+  { name: "Empower Circle", image: "/images/empower.png" },
+  { name: "GDG Benin", image: "/images/gdg.png" },
+  { name: "She Code Africa", image: "/images/sca.png" },
+  { name: "Victor Ventures", image: "/images/victor.png" },
+  { name: "W Initiative", image: "/images/w.png" },
 ];
 
 export const timeline: TimelineItem[] = [
@@ -168,27 +170,58 @@ export const pastEventGallery = [
 
 export const partners: Partner[] = [
   {
-    name: "Nebula Capital",
-    tier: "platinum",
-    description: "Catalyzing Edo founders through grants and venture support.",
-    logo: "/logos/nebula.svg",
+    name: "Edo Innovators",
+    description:
+      "Regional innovation studio co-designing civic tech pilots with Edo Tech talent.",
+    logo: "/images/edo-innov.png",
+    focusArea: "Civic Technology",
     testimonial: {
       quote:
-        "Edo Tech Community has become the launchpad for frontier founders in West Africa.",
-      author: "Zara Sule, Partner",
+        "Co-building with Edo Tech unlocks lightning-fast feedback loops between civic ideas and real users.",
+      author: "Eseosa A., Program Director",
     },
   },
   {
-    name: "SunCity Power",
-    tier: "gold",
-    description: "Powering eco-friendly labs and clean energy research.",
-    logo: "/logos/suncity.svg",
+    name: "Diamund Labs",
+    description: "Hardware residency sponsoring clean energy prototypes.",
+    logo: "/images/Diamund.png",
+    focusArea: "Climate Hardware",
   },
   {
-    name: "NigerHub",
-    tier: "silver",
-    description: "Regional devrel partner for cloud-native upskilling.",
-    logo: "/logos/nigerhub.svg",
+    name: "Empower Circle",
+    description: "Community banking collective funding Paty fellows.",
+    logo: "/images/empower.png",
+    focusArea: "Community Finance",
+  },
+  {
+    name: "GDG Benin",
+    description: "Google Developer Group powering cloud study jams.",
+    logo: "/images/gdg.png",
+    focusArea: "Developer Education",
+  },
+  {
+    name: "She Code Africa",
+    description: "Design + engineering mentorship for women builders.",
+    logo: "/images/sca.png",
+    focusArea: "Inclusive Talent",
+  },
+  {
+    name: "Benin Connect",
+    description: "Local ISP offering bandwidth grants for hackspaces.",
+    logo: "/images/bc.png",
+    focusArea: "Connectivity",
+  },
+  {
+    name: "Victor Ventures",
+    description: "Angel collective backing Edo-first social enterprises.",
+    logo: "/images/victor.png",
+    focusArea: "Impact Capital",
+  },
+  {
+    name: "W Initiative",
+    description: "Media network amplifying program storytelling.",
+    logo: "/images/w.png",
+    focusArea: "Media & Storytelling",
   },
 ];
 
@@ -231,4 +264,5 @@ export const faqs: FAQ[] = [
       "Drop a markdown or MDX file into /content/blog, push to main, and Vercel rebuilds automatically.",
   },
 ];
+
 

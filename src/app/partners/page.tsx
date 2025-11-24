@@ -7,7 +7,7 @@ import { PartnerTestimonials } from "@/components/partners/partner-testimonials"
 export const metadata = {
   title: "Partners",
   description:
-    "Explore partner tiers, testimonials, and how to collaborate with Edo Tech.",
+    "Explore the collaborators powering Edo Tech Community. Every partnership is grounded in shared impact—no paywalls or tiered access.",
 };
 
 const benefits = [
@@ -18,48 +18,39 @@ const benefits = [
 ];
 
 export default function PartnersPage() {
-  const tiers = ["platinum", "gold", "silver"] as const;
-
   return (
     <div className="mx-auto max-w-6xl space-y-12 px-6 py-16">
       <section className="rounded-[32px] border border-white/10 bg-white/5 p-10">
         <h1 className="font-heading text-4xl font-semibold">
-          Meet the allies funding Edo&apos;s innovation future
+          Meet the allies powering Edo&apos;s innovation future
         </h1>
         <p className="mt-4 text-lg text-neutral-300">
-          Tiered visibility, community impact metrics, and co-created programs.
+          Every collaboration is rooted in open knowledge-sharing and free access
+          for community members.
         </p>
       </section>
 
       <SectionHeading
-        eyebrow="Tiers"
-        title="Partner grid"
-        description="Logos glow by tier, hover for benefits."
+        eyebrow="Partners"
+        title="Collaborators across ecosystems"
+        description="All partners sit at the same table—no tiers, just shared stewardship."
       />
-      <div className="space-y-6">
-        {tiers.map((tier) => (
-          <div key={tier}>
-            <p className="text-sm uppercase tracking-[0.4em] text-secondary/70">
-              {tier}
-            </p>
-            <div className="mt-4 grid gap-4 md:grid-cols-3">
-              {partners
-                .filter((partner) => partner.tier === tier)
-                .map((partner) => (
-                  <div
-                    key={partner.name}
-                    className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center transition hover:-translate-y-1 hover:border-secondary/60"
-                  >
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-secondary/40 bg-black/30">
-                      <Image src={partner.logo} alt={partner.name} width={48} height={48} />
-                    </div>
-                    <p className="mt-4 text-xl font-semibold">{partner.name}</p>
-                    <p className="text-sm text-neutral-400">
-                      {partner.description}
-                    </p>
-                  </div>
-                ))}
+      <div className="grid gap-6 md:grid-cols-3">
+        {partners.map((partner) => (
+          <div
+            key={partner.name}
+            className="rounded-3xl border border-white/10 bg-white/5 p-6 text-center transition hover:-translate-y-1 hover:border-secondary/60"
+          >
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-secondary/40 bg-black/30">
+              <Image src={partner.logo} alt={partner.name} width={48} height={48} />
             </div>
+            <p className="mt-4 text-xl font-semibold">{partner.name}</p>
+            {partner.focusArea && (
+              <p className="text-xs uppercase tracking-[0.35em] text-secondary/70">
+                {partner.focusArea}
+              </p>
+            )}
+            <p className="mt-3 text-sm text-neutral-400">{partner.description}</p>
           </div>
         ))}
       </div>
@@ -67,14 +58,14 @@ export default function PartnersPage() {
       <SectionHeading
         eyebrow="Testimonials"
         title="Why they partner with us"
-        description="Carousel rotates quotes from across tiers."
+        description="Carousel rotates quotes from across focus areas."
       />
       <PartnerTestimonials partners={partners} />
 
       <SectionHeading
         eyebrow="Benefits"
         title="Partnership benefits"
-        description="Every tier unlocks shared data rooms, local insights, and co-branded activations."
+        description="Shared data rooms, local insights, and co-branded activations available to every collaborator."
       />
       <ul className="grid gap-4 md:grid-cols-2">
         {benefits.map((benefit) => (

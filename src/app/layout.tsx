@@ -45,7 +45,7 @@ const organizationJsonLd = {
   "@type": "Organization",
   name: siteConfig.name,
   url: siteConfig.url,
-  logo: `${siteConfig.url}/logo.svg`,
+  logo: `${siteConfig.url}/images/logo.svg`,
   sameAs: Object.values(siteConfig.socials),
   description: siteConfig.description,
 };

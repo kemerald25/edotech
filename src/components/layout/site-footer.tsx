@@ -1,5 +1,6 @@
 import { siteConfig } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 
 const footerLinks = [
   {
@@ -33,7 +34,16 @@ export function SiteFooter() {
     <footer className="border-t border-white/10 bg-black/40">
       <div className="mx-auto grid max-w-6xl gap-12 px-6 py-12 md:grid-cols-4">
         <div>
-          <p className="text-lg font-heading text-gradient">Edo Tech Community</p>
+        <Link href="/" className="flex items-center gap-3 text-lg font-heading tracking-wide w-[150px]">
+          <Image
+            src="/images/logo-white.svg"
+            alt="Edo Tech Community logo"
+            width={40}
+            height={40}
+            className="w-full"
+            priority
+          />
+        </Link>
           <p className="mt-3 text-sm text-neutral-400">{siteConfig.description}</p>
           <div className="mt-6 text-sm text-neutral-500">
             © {new Date().getFullYear()} Edo Tech Community
