@@ -20,11 +20,11 @@ export const mdxComponents = {
   h2: ProseH2,
   p: ProseP,
   Callout,
-  img: (props: React.ComponentProps<typeof Image>) => (
+  img: ({ alt, className, ...rest }: React.ComponentProps<typeof Image>) => (
     <Image
-      className={cn("rounded-3xl border border-white/10", props.className)}
-      alt={props.alt ?? ""}
-      {...props}
+      className={cn("rounded-3xl border border-white/10", className)}
+      alt={alt ?? ""}
+      {...rest}
     />
   ),
 };
