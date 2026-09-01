@@ -153,13 +153,13 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
         <div className="space-y-3 max-w-lg mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3.5 py-1 text-xs font-semibold text-secondary">
             <Sparkles className="size-3.5" />
-            <span>Welcome to the Edo Tech Guild</span>
+            <span>Welcome to the Edo Tech Community</span>
           </div>
           <h3 className="font-heading text-3xl font-bold text-white tracking-tight">
             You&apos;re Officially In, {firstName}!
           </h3>
           <p className="text-sm text-neutral-300 leading-relaxed">
-            Your membership profile is confirmed and synced. Click below to join the active **Edo Tech WhatsApp Community** immediately!
+            Your membership profile is confirmed and synced. Click below to join the active Edo Tech WhatsApp Community immediately!
           </p>
         </div>
 
@@ -304,13 +304,15 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
               className="w-full rounded-xl border border-white/10 bg-black/60 px-3.5 py-3 text-xs text-white focus:border-secondary focus:outline-none"
             >
               <option value="">Please Select</option>
-              <option value="Benin City, Edo State">Benin City, Edo State</option>
-              <option value="Auchi, Edo State">Auchi, Edo State</option>
-              <option value="Ekpoma, Edo State">Ekpoma, Edo State</option>
-              <option value="Uromi, Edo State">Uromi, Edo State</option>
-              <option value="Irrua, Edo State">Irrua, Edo State</option>
-              <option value="Lagos, Nigeria">Lagos, Nigeria</option>
-              <option value="Abuja, Nigeria">Abuja, Nigeria</option>
+              <option value="Benin City">Benin City</option>
+              <option value="Auchi">Auchi</option>
+              <option value="Ekpoma">Ekpoma</option>
+              <option value="Uromi">Uromi</option>
+              <option value="Irrua">Irrua</option>
+              <option value="Okada">Okada</option>
+              <option value="Iyamho">Iyamho</option>
+              <option value="Lagos">Lagos</option>
+              <option value="Abuja">Abuja</option>
               <option value="Other Nigerian City">Other Nigerian City</option>
               <option value="Diaspora / International">Diaspora / International</option>
             </select>
@@ -387,18 +389,15 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
             className="w-full rounded-xl border border-white/10 bg-black/60 px-3.5 py-3 text-xs text-white focus:border-secondary focus:outline-none"
           >
             <option value="">Please Select</option>
-            <option value="Software Engineering">Software Engineering (Frontend / Backend / Fullstack)</option>
-            <option value="Product Design / UI/UX">Product Design / UI/UX</option>
-            <option value="Data Science & AI/ML">Data Science & AI / ML</option>
-            <option value="Product Management">Product Management</option>
-            <option value="Cybersecurity">Cybersecurity & SecOps</option>
-            <option value="Cloud & DevOps">Cloud Engineering & DevOps</option>
-            <option value="Blockchain & Web3">Blockchain & Web3</option>
-            <option value="Hardware & IoT">Hardware, Embedded Systems & IoT</option>
-            <option value="Growth & Digital Marketing">Growth, SEO & Digital Marketing</option>
-            <option value="Tech Sales & Ops">Tech Sales & Operations</option>
-            <option value="Student / Aspiring Techie">Student / Aspiring Techie</option>
+            <option value="Artificial Intelligence">Artificial Intelligence</option>
+            <option value="Business Development">Business Development</option>
+            <option value="Cybersecurity">Cybersecurity</option>
+            <option value="Data">Data</option>
+            <option value="Design">Design</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing & Sales">Marketing & Sales</option>
             <option value="Other">Other</option>
+            <option value="Product Management">Product Management</option>
           </select>
         </div>
 

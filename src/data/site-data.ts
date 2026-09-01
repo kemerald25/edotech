@@ -84,7 +84,7 @@ export const teamMembers: TeamMember[] = [
     name: "Chioma Obikolo",
     role: "Community Manager",
     department: "Executives",
-    bio: "Hosts member onboarding, care calls, and keeps the guild connected.",
+    bio: "Hosts member onboarding, care calls, and keeps the community connected.",
     socials: [],
   },
   {

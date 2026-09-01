@@ -35,7 +35,7 @@ export default async function HomePage() {
             </div>
 
             <h1 className="font-heading text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.08] tracking-tight text-white">
-              A futurist guild shaping Edo&apos;s innovation economy.
+              A futurist community shaping Edo&apos;s innovation economy.
             </h1>
 
             <p className="text-lg sm:text-xl text-neutral-300 leading-relaxed max-w-2xl">
@@ -146,7 +146,7 @@ export default async function HomePage() {
         <SectionHeading
           eyebrow="Journal"
           title="Latest from the community blog"
-          description="Research briefs, lab dispatches, and member stories published by the guild."
+          description="Research briefs, lab dispatches, and member stories published by the community."
           actions={
             <Button variant="ghost" asChild className="rounded-xl">
               <Link href="/blog">View all posts</Link>

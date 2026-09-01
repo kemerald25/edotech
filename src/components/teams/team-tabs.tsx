@@ -70,7 +70,7 @@ export function TeamTabs() {
             </div>
 
             <div className="pt-3 border-t border-white/10 text-[11px] text-neutral-500 font-medium">
-              Verified Contributor · Edo Tech Guild
+              Verified Contributor · Edo Tech Community
             </div>
           </div>
         ))}

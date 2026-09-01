@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react";
 export const metadata = {
   title: "Teams | Edo Tech Community",
   description:
-    "Meet the humans leading guilds, labs, design systems, and contributor circles across Edo State.",
+    "Meet the humans leading communities, labs, design systems, and contributor circles across Edo State.",
 };
 
 export default function TeamsPage() {
@@ -13,11 +13,11 @@ export default function TeamsPage() {
       <section className="relative pt-6 max-w-3xl space-y-6">
         <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-secondary">
           <Sparkles className="size-3.5" />
-          <span>Guild Directory</span>
+          <span>Community Directory</span>
         </div>
 
         <h1 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight text-white leading-tight">
-          Maintainers, chairs, and guild captains.
+          Maintainers, chairs, and community captains.
         </h1>
 
         <p className="text-lg sm:text-xl text-neutral-300 leading-relaxed">

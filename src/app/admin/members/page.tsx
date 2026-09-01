@@ -33,7 +33,7 @@ export default function MembersAdminPage() {
       <div>
         <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary mb-2">
           <Users className="size-3.5" />
-          <span>Membership Guild Directory</span>
+          <span>Member Directory</span>
         </div>
         <h1 className="font-heading text-3xl font-bold text-white tracking-tight">
           Members & Onboarding Applications

@@ -72,7 +72,7 @@ export function SiteHeader() {
             href="/join"
             className="hidden md:block rounded-full bg-secondary px-5 py-2 text-sm font-bold text-background shadow-glow transition hover:-translate-y-0.5"
           >
-            Join the Guild
+            Join the Community
           </Link>
           <button
             className="focus-ring rounded-full border border-white/10 p-2 lg:hidden"
@@ -111,7 +111,7 @@ export function SiteHeader() {
               className="rounded-2xl bg-secondary px-4 py-3 text-center font-bold text-background shadow-glow"
               onClick={() => setOpen(false)}
             >
-              Join the Guild
+              Join the Community
             </Link>
           </nav>
         </div>

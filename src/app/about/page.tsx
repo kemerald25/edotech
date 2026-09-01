@@ -52,7 +52,7 @@ export default function AboutPage() {
         <SectionHeading
           eyebrow="Milestones"
           title="Timeline of momentum"
-          description="The pivotal years that shaped our guild into Edo State's frontier technology community."
+          description="The pivotal years that shaped our community into Edo State's frontier technology ecosystem."
         />
 
         <div className="relative border-l-2 border-secondary/30 ml-4 sm:ml-8 pl-6 sm:pl-10 space-y-12">

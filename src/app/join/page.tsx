@@ -45,7 +45,7 @@ const joiningBenefits = [
     icon: Users,
   },
   {
-    title: "Verified Guild Directory",
+    title: "Verified Member Directory",
     description: "Showcase your portfolio and open-source contributions to recruiters and partners.",
     icon: Shield,
   },
@@ -81,11 +81,11 @@ export default function JoinPage() {
         </div>
 
         <h1 className="font-heading text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
-          Join the Edo Tech Guild
+          Join the Edo Tech Community
         </h1>
 
         <p className="text-sm sm:text-base text-neutral-300 max-w-2xl mx-auto leading-relaxed">
-          Connect with 2,600+ technologists, founders, and innovators. Fill in your details below to gain **instant access** to the active WhatsApp community.
+          Connect with 2,600+ technologists, founders, and innovators. Fill in your details below to gain instant access to the active WhatsApp community.
         </p>
       </section>
 
@@ -126,7 +126,7 @@ export default function JoinPage() {
         <SectionHeading
           eyebrow="Perks & Access"
           title="What every member unlocks"
-          description="One guild, shared benefits. Here is how we support your journey as a builder."
+          description="One community, shared benefits. Here is how we support your journey as a builder."
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

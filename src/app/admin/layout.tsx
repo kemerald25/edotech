@@ -159,7 +159,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       badge: "Auth",
     },
     {
-      label: "Members Guild",
+      label: "Members Directory",
       href: "/admin/members",
       icon: Users,
       show: can("members.view"),

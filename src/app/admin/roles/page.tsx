@@ -98,7 +98,7 @@ export default function RolesAdminPage() {
     { title: "Events & RSVPs", prefix: "events." },
     { title: "Blog & Publications", prefix: "blog." },
     { title: "HubSpot CRM & Leads", prefix: "hubspot." },
-    { title: "Members Guild", prefix: "members." },
+    { title: "Members Directory", prefix: "members." },
     { title: "System & Roles Governance", prefix: "roles." },
   ];
 
