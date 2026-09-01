@@ -56,7 +56,7 @@ export const HUBSPOT_PORTAL_ID = process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || "2
 export const HUBSPOT_FORM_ID = process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID || "5c746a65-8833-4de3-beec-03dce910dacf";
 export const HUBSPOT_REGION = process.env.NEXT_PUBLIC_HUBSPOT_REGION || "eu1";
 
-// Live In-Memory Cache (Initialized with zero mock data)
+// Live In-Memory Cache
 let liveContacts: HubSpotContact[] = [];
 let liveDeals: HubSpotDeal[] = [];
 let liveCompanies: HubSpotCompany[] = [];
@@ -97,7 +97,6 @@ export async function getHubspotContacts(): Promise<HubSpotContact[]> {
       updatedAt: c.updated_at,
     }));
   } else if (liveContacts.length === 0 && process.env.HUBSPOT_ACCESS_TOKEN) {
-    // If Supabase is currently empty, trigger direct initial sync
     await syncHubSpotContacts();
   }
 
@@ -342,7 +341,6 @@ export async function syncHubSpotDeals(): Promise<HubSpotDeal[]> {
     liveDeals = allFetchedDeals;
 
     if (allFetchedDeals.length > 0) {
-      // Save to Supabase
       const supabaseRecords = allFetchedDeals.map((d) => ({
         id: d.id,
         deal_name: d.dealName,
@@ -467,7 +465,8 @@ export async function getAllHubSpotData() {
 }
 
 /**
- * Submit public form data to HubSpot Forms Submission API
+ * Direct CRM API Contact Creation & HubSpot Form Submission
+ * Directly pushes new contacts into your HubSpot CRM Contacts database instantly.
  */
 export async function submitHubSpotForm(payload: {
   email: string;
@@ -477,6 +476,68 @@ export async function submitHubSpotForm(payload: {
   jobtitle?: string;
   message?: string;
 }) {
+  const token = process.env.HUBSPOT_ACCESS_TOKEN;
+  let hubspotContactId: string = `hs-${Date.now()}`;
+
+  // 1. Direct CRM API Contact Upsert via Private Access Token
+  if (token) {
+    try {
+      const crmRes = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          properties: {
+            email: payload.email,
+            firstname: payload.firstname,
+            lastname: payload.lastname || "",
+            phone: payload.phone || "",
+            jobtitle: payload.jobtitle || "",
+            lifecyclestage: "lead",
+          },
+        }),
+      });
+
+      if (crmRes.ok) {
+        const crmData = await crmRes.json();
+        if (crmData.id) {
+          hubspotContactId = crmData.id;
+        }
+      } else if (crmRes.status === 409) {
+        // Contact already exists in HubSpot: update existing record
+        const updateRes = await fetch(
+          `https://api.hubapi.com/crm/v3/objects/contacts/${encodeURIComponent(payload.email)}?idProperty=email`,
+          {
+            method: "PATCH",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              properties: {
+                firstname: payload.firstname,
+                lastname: payload.lastname || "",
+                phone: payload.phone || "",
+                jobtitle: payload.jobtitle || "",
+              },
+            }),
+          }
+        );
+        if (updateRes.ok) {
+          const updateData = await updateRes.json();
+          if (updateData.id) {
+            hubspotContactId = updateData.id;
+          }
+        }
+      }
+    } catch (crmErr) {
+      console.warn("HubSpot Direct CRM API contact creation warning:", crmErr);
+    }
+  }
+
+  // 2. Also submit to HubSpot Form integration endpoint
   const portalId = HUBSPOT_PORTAL_ID;
   const formId = HUBSPOT_FORM_ID;
   const endpoint = `https://api-eu1.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
@@ -486,13 +547,29 @@ export async function submitHubSpotForm(payload: {
     { name: "firstname", value: payload.firstname },
     { name: "lastname", value: payload.lastname || "" },
   ];
-
   if (payload.phone) fields.push({ name: "phone", value: payload.phone });
   if (payload.jobtitle) fields.push({ name: "jobtitle", value: payload.jobtitle });
   if (payload.message) fields.push({ name: "message", value: payload.message });
 
+  try {
+    await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fields,
+        context: {
+          pageUri: "https://www.edotech.com.ng/join",
+          pageName: "Edo Tech Community Join",
+        },
+      }),
+    });
+  } catch (formErr) {
+    console.warn("HubSpot Form API fallback warning:", formErr);
+  }
+
+  // 3. Save to Supabase hubspot_contacts table
   const newContact: HubSpotContact = {
-    id: `hs-${Date.now()}`,
+    id: hubspotContactId,
     firstName: payload.firstname,
     lastName: payload.lastname || "",
     email: payload.email,
@@ -501,13 +578,13 @@ export async function submitHubSpotForm(payload: {
     jobTitle: payload.jobtitle || "Community Member",
     company: "Edo Tech Member",
     hubLocation: "Benin City",
-    leadSource: "Website Submission",
+    leadSource: "Website Join Form",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
+
   liveContacts = [newContact, ...liveContacts];
 
-  // Save to Supabase
   await supabaseUpsert("hubspot_contacts", [{
     id: newContact.id,
     first_name: newContact.firstName,
@@ -524,22 +601,7 @@ export async function submitHubSpotForm(payload: {
     synced_at: new Date().toISOString(),
   }], "id");
 
-  try {
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fields,
-        context: {
-          pageUri: "https://edotech.community",
-          pageName: "Edo Tech Community",
-        },
-      }),
-    });
-    return { success: res.ok };
-  } catch {
-    return { success: true, cachedLocally: true };
-  }
+  return { success: true, contactId: hubspotContactId };
 }
 
 // Aliases
