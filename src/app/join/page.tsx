@@ -1,152 +1,129 @@
-import { AnimatedCounter } from "@/components/animated-counter";
 import { HubspotForm } from "@/components/forms/hubspot-form";
-import { SectionHeading } from "@/components/ui/section-heading";
-import { faqs, missionStats } from "@/data/site-data";
-import { CheckCircle2, Quote, Shield } from "lucide-react";
+import { CheckCircle2, ShieldCheck, Sparkles } from "lucide-react";
 
 const joiningBenefits = [
   "Hub access across Benin, Auchi, and remote pods",
-  "Jobs + funding alerts curated weekly",
-  "Accountability circles to ship your roadmap",
-  "Community directory with verified skill tags",
+  "Weekly curated jobs, grants, and funding alerts",
+  "Accountability circles to ship your tech roadmap",
+  "Verified builder directory & community perks",
 ];
 
-const membershipHighlights = [
-  "Membership is 100% free—no dues or tiers.",
-  "Same-day access to events, labs, and resource drops.",
-  "Partner perks are shared with every verified member.",
-];
-
-const quotes = [
+const faqs = [
   {
-    quote:
-      "Joining Edo Tech unlocked a network of mentors who helped me launch a climate hardware startup in six months.",
-    author: "Efe Osazuwa · Founder, SolGrid",
+    question: "Is membership free?",
+    answer: "Yes, membership is 100% free with no hidden fees or tiers.",
   },
   {
-    quote:
-      "The Builder circle paired our civic lab with product designers that understood government constraints.",
-    author: "Mary Asemota · Policy Lead",
+    question: "What happens after I apply?",
+    answer: "Our membership team will review your application and send your orientation details within 72 hours.",
+  },
+  {
+    question: "Who can join?",
+    answer: "Founders, developers, designers, students, civic leaders, and tech enthusiasts in Edo State or the diaspora.",
   },
 ];
 
 export const metadata = {
-  title: "Join Us",
+  title: "Join Us | Edo Tech Community",
   description:
-    "Free membership onboarding with HubSpot, FAQs, and social proof for the Edo Tech Community.",
+    "Join the Edo Tech Community. Connect with tech builders, access hubs, and discover funding opportunities.",
 };
 
 export default function JoinPage() {
   return (
-    <div className="mx-auto max-w-6xl space-y-12 px-6 py-16">
-      <section className="rounded-[32px] border border-white/10 bg-gradient-to-br from-primary/20 via-background to-background p-10">
-        <div className="grid gap-8 md:grid-cols-2">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-secondary">
-              Join the guild
-            </p>
-            <h1 className="mt-4 font-heading text-4xl font-semibold">
-              Membership built for futurists, founders, and civic operators
-            </h1>
-            <p className="mt-4 text-lg text-neutral-200">
-              Complete the HubSpot form and our membership stewards will guide
-              you through orientation within 72 hours—no fees, no paywalls.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-4 text-sm text-neutral-300">
-              {joiningBenefits.map((benefit) => (
-                <span key={benefit} className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2">
-                  <CheckCircle2 className="size-4 text-secondary" />
-                  {benefit}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="grid gap-4 rounded-3xl border border-white/10 bg-black/40 p-6">
-            {missionStats.map((stat) => (
-              <div key={stat.label}>
-                <p className="text-4xl font-semibold text-secondary">
-                  <AnimatedCounter value={stat.value} />+
-                </p>
-                <p className="text-sm text-neutral-400">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+    <div className="mx-auto max-w-6xl px-6 py-12 lg:py-20 space-y-16">
+      {/* Hero Header */}
+      <div className="max-w-3xl space-y-4">
+        <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3.5 py-1 text-xs font-medium text-secondary">
+          <Sparkles className="size-3.5" />
+          <span>Free Membership</span>
         </div>
-      </section>
-
-      <SectionHeading
-        eyebrow="Membership"
-        title="Access is free forever"
-        description="One community, shared benefits. Here’s what every member unlocks."
-      />
-      <div className="grid gap-6 md:grid-cols-3">
-        {membershipHighlights.map((highlight) => (
-          <article
-            key={highlight}
-            className="rounded-3xl border border-white/10 bg-white/5 p-6 text-sm text-neutral-200"
-          >
-            <Shield className="mb-3 size-5 text-secondary" />
-            {highlight}
-          </article>
-        ))}
-      </div>
-
-      <SectionHeading
-        eyebrow="Apply"
-        title="Complete the HubSpot form"
-        description="Secure embed with validation, success states, and privacy consent."
-      />
-      <div className="space-y-4 rounded-[32px] border border-white/10 bg-white/5 p-6">
-        <HubspotForm />
-        <p className="text-xs text-neutral-400">
-          By submitting the form you agree to our{" "}
-          <a href="/privacy" className="text-secondary underline">
-            privacy policy
-          </a>{" "}
-          and consent to be contacted about Edo Tech programs.
+        <h1 className="font-heading text-4xl sm:text-5xl font-bold tracking-tight text-white">
+          Join the Edo Tech Community
+        </h1>
+        <p className="text-lg text-neutral-300 leading-relaxed">
+          Connect with developers, founders, and innovators shaping Edo State&apos;s tech ecosystem.
+          Gain instant access to hubs, mentorship, and opportunities.
         </p>
       </div>
 
-      <SectionHeading
-        eyebrow="Community voices"
-        title="Social proof"
-        description="Testimonials from members spanning founders to policy shapers."
-      />
-      <div className="grid gap-6 md:grid-cols-2">
-        {quotes.map((item) => (
-          <blockquote
-            key={item.author}
-            className="rounded-3xl border border-white/10 bg-white/5 p-6 text-neutral-200"
-          >
-            <Quote className="mb-4 size-6 text-secondary" />
-            “{item.quote}”
-            <footer className="mt-4 text-xs uppercase tracking-[0.3em] text-secondary/80">
-              {item.author}
-            </footer>
-          </blockquote>
-        ))}
-      </div>
+      {/* Main Content Layout */}
+      <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
+        {/* Left Column: Benefits & FAQs */}
+        <div className="lg:col-span-6 space-y-10">
+          {/* Key Benefits */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold text-white">Why join us?</h2>
+            <ul className="space-y-3">
+              {joiningBenefits.map((benefit) => (
+                <li key={benefit} className="flex items-start gap-3 text-neutral-200">
+                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-secondary" />
+                  <span className="text-sm sm:text-base">{benefit}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-      <SectionHeading
-        eyebrow="FAQ"
-        title="Membership questions"
-        description="Transparent answers before you request an invite."
-      />
-      <div className="space-y-4">
-        {faqs.map((faq) => (
-          <details
-            key={faq.question}
-            className="rounded-3xl border border-white/10 bg-white/5 p-4"
-          >
-            <summary className="cursor-pointer text-lg font-semibold text-white">
-              {faq.question}
-            </summary>
-            <p className="mt-2 text-sm text-neutral-300">{faq.answer}</p>
-          </details>
-        ))}
+          {/* Social Proof Quote */}
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 relative">
+            <p className="text-sm italic text-neutral-300 leading-relaxed">
+              &ldquo;Joining Edo Tech unlocked a network of mentors and partners that helped us launch our hardware startup in six months.&rdquo;
+            </p>
+            <div className="mt-4 flex items-center gap-3">
+              <div className="size-8 rounded-full bg-secondary/20 flex items-center justify-center font-bold text-xs text-secondary">
+                EO
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-white">Efe Osazuwa</p>
+                <p className="text-[11px] text-neutral-400">Founder, SolGrid</p>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ Accordion */}
+          <div className="space-y-4 pt-4 border-t border-white/10">
+            <h2 className="text-lg font-semibold text-white">Frequently Asked Questions</h2>
+            <div className="space-y-3">
+              {faqs.map((faq) => (
+                <details
+                  key={faq.question}
+                  className="group rounded-xl border border-white/10 bg-white/5 p-4 [&_summary::-webkit-details-marker]:hidden"
+                >
+                  <summary className="flex cursor-pointer items-center justify-between font-medium text-white text-sm">
+                    {faq.question}
+                    <span className="ml-2 text-neutral-400 group-open:rotate-180 transition-transform">
+                      ↓
+                    </span>
+                  </summary>
+                  <p className="mt-2 text-xs text-neutral-300 leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: HubSpot Form Card */}
+        <div className="lg:col-span-6">
+          <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] backdrop-blur-sm p-6 sm:p-8 space-y-6 shadow-2xl">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-bold text-white font-heading">Complete Registration</h2>
+              <p className="text-xs text-neutral-400">Fill in your details below to get started.</p>
+            </div>
+
+            <HubspotForm />
+
+            <div className="pt-2 border-t border-white/10 flex items-center gap-2 text-xs text-neutral-400">
+              <ShieldCheck className="size-4 text-secondary shrink-0" />
+              <span>100% free • No spam • Privacy protected</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+
 
 
