@@ -122,11 +122,6 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
       if (data.success) {
         setIsSuccess(true);
         if (onSuccess) onSuccess();
-
-        // Auto-redirect to WhatsApp community after brief celebratory display
-        setTimeout(() => {
-          window.location.href = whatsappUrl;
-        }, 2200);
       } else {
         setError(data.error || "Failed to submit membership application.");
       }
@@ -163,20 +158,17 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
           </p>
         </div>
 
-        <div className="pt-4 max-w-md mx-auto space-y-3">
+        <div className="pt-4 max-w-md mx-auto">
           <a
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center justify-center gap-3 w-full rounded-2xl bg-secondary hover:bg-secondary/90 py-4 px-6 text-sm font-bold text-black shadow-xl shadow-secondary/20 transition transform hover:-translate-y-0.5"
+            className="flex items-center justify-center gap-3 w-full rounded-2xl bg-secondary hover:bg-secondary/90 py-4 px-6 text-sm font-bold text-black shadow-xl shadow-secondary/20 transition transform hover:-translate-y-0.5 cursor-pointer"
           >
             <Phone className="size-5 text-black" />
             <span>Join the Edo Tech WhatsApp Community Now</span>
             <ExternalLink className="size-4" />
           </a>
-          <p className="text-xs text-neutral-500">
-            Redirecting you automatically in a few seconds...
-          </p>
         </div>
       </div>
     );
@@ -558,12 +550,8 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
         </div>
       </div>
 
-      {/* Footer Notice & Submit Button */}
-      <div className="space-y-4 pt-2">
-        <p className="text-xs text-neutral-400 text-center">
-          You will be redirected to the community after you hit submit.
-        </p>
-
+      {/* Submit Button */}
+      <div className="pt-2">
         <button
           type="submit"
           disabled={loading || uploadingImage}
