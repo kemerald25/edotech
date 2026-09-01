@@ -60,7 +60,7 @@ export const HUBSPOT_REGION = process.env.NEXT_PUBLIC_HUBSPOT_REGION || "eu1";
 let liveContacts: HubSpotContact[] = [];
 let liveDeals: HubSpotDeal[] = [];
 let liveCompanies: HubSpotCompany[] = [];
-let liveLogs: HubSpotSyncLog[] = [];
+const liveLogs: HubSpotSyncLog[] = [];
 
 /**
  * Fetch all synced contacts from Supabase database or active cache
