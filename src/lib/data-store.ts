@@ -115,7 +115,7 @@ const INITIAL_EVENTS: PlatformEvent[] = [
     category: "Community",
     date: "2026-11-28T14:00:00Z",
     locationType: "virtual",
-    venueName: "Discord Stage & YouTube Live",
+    venueName: "Virtual Community & YouTube Live",
     address: "Global Livestream",
     virtualLink: "https://youtube.com/live/edotech-demo-day",
     bannerUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",

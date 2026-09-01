@@ -95,7 +95,7 @@ export function ResourceSubmissionForm() {
       </Button>
       {state === "success" && (
         <p className="text-center text-sm text-secondary">
-          Thanks! A curator will review your submission within 48 hours.
+          Thanks! Your resource submission has been received and added.
         </p>
       )}
     </form>

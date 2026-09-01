@@ -30,12 +30,17 @@ export const siteConfig = {
   name: "Edo Tech Community",
   description:
     "A futuristic hub for Edo State technologists to learn, build, and grow together.",
-  url: "https://edotech.community",
+  url: "https://www.edotech.com.ng",
   ogImage: "/opengraph-image.svg",
+  whatsappCommunityUrl:
+    process.env.NEXT_PUBLIC_WHATSAPP_COMMUNITY_URL ||
+    "https://chat.whatsapp.com/FHIMwpEYqrm14RaErHjstK",
   socials: {
+    whatsapp:
+      process.env.NEXT_PUBLIC_WHATSAPP_COMMUNITY_URL ||
+      "https://chat.whatsapp.com/FHIMwpEYqrm14RaErHjstK",
     x: "https://x.com/edotech",
     github: "https://github.com/edotech",
     linkedin: "https://www.linkedin.com/company/edo-tech-community",
   },
 };
-
