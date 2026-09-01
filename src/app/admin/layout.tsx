@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Shield,
   Calendar,
@@ -11,16 +11,27 @@ import {
   Users,
   LayoutDashboard,
   ShieldCheck,
-  CheckCircle2,
+  LogOut,
+  UserCheck,
 } from "lucide-react";
-import { PermissionId, RoleId, hasPermission } from "@/lib/permissions";
-import { getAllRoles, getAdminUser, AdminUser, Role } from "@/lib/data-store";
+import { PermissionId, Role, hasPermission } from "@/lib/permissions";
+import { getAllRoles } from "@/lib/data-store";
+
+interface AuthenticatedUser {
+  id: string;
+  name: string;
+  email: string;
+  roleId: string;
+  roleName: string;
+  assignedRoles: string[];
+  status: string;
+}
 
 interface AdminContextType {
-  currentUser: AdminUser;
+  currentUser: AuthenticatedUser;
   roles: Role[];
-  switchRole: (roleId: RoleId) => void;
   can: (permission: PermissionId) => boolean;
+  logout: () => Promise<void>;
 }
 
 const AdminContext = createContext<AdminContextType | null>(null);
@@ -33,21 +44,77 @@ export const useAdmin = () => {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [roles] = useState<Role[]>(() => getAllRoles());
-  const [currentUser, setCurrentUser] = useState<AdminUser>(() => getAdminUser("user-1")!);
-  const [roleMenuOpen, setRoleMenuOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<AuthenticatedUser | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // If on login page, render child directly without sidebar/guard
+  const isLoginPage = pathname === "/admin/login";
+
+  useEffect(() => {
+    if (isLoginPage) {
+      setLoading(false);
+      return;
+    }
+
+    const checkSession = async () => {
+      try {
+        const res = await fetch("/api/admin/auth");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.user) {
+            setCurrentUser(data.user);
+          } else {
+            router.push("/admin/login");
+          }
+        } else {
+          router.push("/admin/login");
+        }
+      } catch {
+        router.push("/admin/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkSession();
+  }, [pathname, isLoginPage, router]);
 
   const can = (permission: PermissionId) => {
+    if (!currentUser) return false;
     return hasPermission(currentUser.assignedRoles, permission);
   };
 
-  const switchRole = (roleId: RoleId) => {
-    setCurrentUser((prev) => ({
-      ...prev,
-      assignedRoles: [roleId],
-    }));
-    setRoleMenuOpen(false);
+  const logout = async () => {
+    try {
+      await fetch("/api/admin/auth", { method: "DELETE" });
+      router.push("/admin/login");
+      router.refresh();
+    } catch (e) {
+      console.error(e);
+      router.push("/admin/login");
+    }
   };
+
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#07090E] flex items-center justify-center text-neutral-400 text-xs">
+        <div className="flex items-center gap-2">
+          <div className="size-2 rounded-full bg-secondary animate-ping" />
+          <span>Verifying admin session...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return null;
+  }
 
   const navItems = [
     {
@@ -85,6 +152,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       badge: "RBAC",
     },
     {
+      label: "Staff & Users",
+      href: "/admin/users",
+      icon: UserCheck,
+      show: can("users.manage"),
+      badge: "Auth",
+    },
+    {
       label: "Members Guild",
       href: "/admin/members",
       icon: Users,
@@ -93,7 +167,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <AdminContext.Provider value={{ currentUser, roles, switchRole, can }}>
+    <AdminContext.Provider value={{ currentUser, roles, can, logout }}>
       <div className="flex min-h-screen bg-[#07090E] text-white">
         {/* Sidebar */}
         <aside className="w-72 border-r border-white/10 bg-[#0B0E17] flex flex-col justify-between p-6 shrink-0">
@@ -111,53 +185,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <h2 className="font-heading text-base font-bold text-white leading-tight">
                     Edo Tech Admin
                   </h2>
-                  <p className="text-[11px] text-neutral-400">Ecosystem Engine</p>
+                  <p className="text-[11px] text-neutral-400">Authenticated Portal</p>
                 </div>
               </div>
             </div>
 
-            {/* Current Active Role Switcher */}
-            <div className="relative">
-              <p className="text-[10px] uppercase font-semibold tracking-wider text-neutral-400 mb-2">
-                Simulate / Active Role
+            {/* Authenticated User Role Badge */}
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+              <p className="text-[10px] uppercase font-bold tracking-wider text-neutral-400">
+                Logged In Role
               </p>
-              <button
-                onClick={() => setRoleMenuOpen(!roleMenuOpen)}
-                className="w-full flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-secondary/40 transition text-left"
-              >
-                <div>
-                  <p className="text-xs font-bold text-secondary">
-                    {roles.find((r) => r.id === currentUser.assignedRoles[0])?.name || currentUser.assignedRoles[0]}
-                  </p>
-                  <p className="text-[10px] text-neutral-400">Click to switch testing role</p>
-                </div>
-                <span className="text-xs text-neutral-400">▼</span>
-              </button>
-
-              {roleMenuOpen && (
-                <div className="absolute top-full left-0 right-0 mt-2 z-50 rounded-2xl bg-[#0E121E] border border-white/10 p-2 shadow-2xl space-y-1">
-                  {roles.map((r) => (
-                    <button
-                      key={r.id}
-                      onClick={() => switchRole(r.id)}
-                      className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between transition ${
-                        currentUser.assignedRoles.includes(r.id)
-                          ? "bg-secondary text-black font-bold"
-                          : "text-neutral-300 hover:bg-white/5"
-                      }`}
-                    >
-                      <span>{r.name}</span>
-                      {currentUser.assignedRoles.includes(r.id) && (
-                        <CheckCircle2 className="size-3.5" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <p className="text-xs font-bold text-secondary">
+                {currentUser.roleName}
+              </p>
+              <p className="text-[11px] text-neutral-400 truncate">{currentUser.email}</p>
             </div>
 
             {/* Navigation Links */}
-            <nav className="space-y-1.5 pt-2">
+            <nav className="space-y-1.5 pt-1">
               <p className="text-[10px] uppercase font-semibold tracking-wider text-neutral-400 mb-2 px-3">
                 Modules & Studios
               </p>
@@ -191,14 +236,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </nav>
           </div>
 
-          {/* User profile footer */}
-          <div className="pt-6 border-t border-white/10 flex items-center gap-3">
-            <div className="size-9 rounded-full bg-secondary/20 flex items-center justify-center font-bold text-secondary text-xs">
-              {currentUser.name.charAt(0)}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
-              <p className="text-[10px] text-neutral-400 truncate">{currentUser.email}</p>
+          {/* User Profile & Sign Out Footer */}
+          <div className="pt-6 border-t border-white/10 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="size-8 rounded-full bg-secondary/20 flex items-center justify-center font-bold text-secondary text-xs shrink-0">
+                  {currentUser.name.charAt(0)}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
+                  <p className="text-[10px] text-neutral-400 truncate">{currentUser.email}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={logout}
+                className="p-2 rounded-xl bg-white/5 hover:bg-red-500/20 text-neutral-400 hover:text-red-400 transition cursor-pointer"
+                title="Sign Out"
+              >
+                <LogOut className="size-4" />
+              </button>
             </div>
           </div>
         </aside>

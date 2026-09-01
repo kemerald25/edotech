@@ -8,7 +8,7 @@ import {
 
 export async function GET() {
   try {
-    const data = getAllHubSpotData();
+    const data = await getAllHubSpotData();
     return NextResponse.json({
       success: true,
       data,

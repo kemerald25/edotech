@@ -28,7 +28,6 @@ const footerLinks = [
       { label: "About & Vision", href: "/about" },
       { label: "Ecosystem Partners", href: "/partners" },
       { label: "Join the Guild", href: "/join" },
-      { label: "Admin Portal", href: "/admin" },
     ],
   },
 ];

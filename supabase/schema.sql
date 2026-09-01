@@ -1,26 +1,30 @@
--- Supabase & PostgreSQL Schema for Edo Tech Community Full-Stack Ecosystem
+-- ==============================================================================
+-- EDO TECH COMMUNITY - SUPABASE / POSTGRESQL PRODUCTION SCHEMA
+-- ==============================================================================
+-- Run this script in your Supabase SQL Editor (https://supabase.com/dashboard/project/_/sql)
+-- to initialize the database tables, RBAC permissions, and HubSpot sync tables.
+-- ==============================================================================
 
--- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- 1. PERMISSIONS CATALOG
+-- 1. SYSTEM CAPABILITIES CATALOG
 CREATE TABLE IF NOT EXISTS permissions (
   id VARCHAR(64) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  description TEXT,
+  description TEXT NOT NULL,
   category VARCHAR(64) NOT NULL
 );
 
--- Insert Default Permission Catalog
+-- Seed System Permissions
 INSERT INTO permissions (id, name, description, category) VALUES
   ('events.create', 'Create Events', 'Can create new events and drafts', 'Events'),
-  ('events.edit', 'Edit Events', 'Can update existing events and venues', 'Events'),
-  ('events.publish', 'Publish Events', 'Can toggle event visibility to public', 'Events'),
-  ('events.delete', 'Delete Events', 'Can remove events from the platform', 'Events'),
-  ('events.view_attendees', 'View RSVPs', 'Can view attendee lists for events', 'Events'),
-  ('events.export_csv', 'Export Attendee CSV', 'Can download attendee lists', 'Events'),
-  ('blog.create', 'Create Blog Posts', 'Can draft new blog articles', 'Blog'),
-  ('blog.edit', 'Edit Blog Posts', 'Can edit existing articles', 'Blog'),
+  ('events.edit', 'Edit Events', 'Can update event details and schedules', 'Events'),
+  ('events.publish', 'Publish Events', 'Can make events live and open RSVPs', 'Events'),
+  ('events.delete', 'Delete Events', 'Can delete events', 'Events'),
+  ('events.view_attendees', 'View RSVPs', 'Can view attendee lists and contact details', 'Events'),
+  ('events.export_csv', 'Export Attendees', 'Can export attendee CSV spreadsheets', 'Events'),
+  ('blog.create', 'Create Blog Posts', 'Can draft articles and research briefs', 'Blog'),
+  ('blog.edit', 'Edit Blog Posts', 'Can edit article content and tags', 'Blog'),
   ('blog.publish', 'Publish Blog Posts', 'Can publish posts live to the blog', 'Blog'),
   ('blog.delete', 'Delete Blog Posts', 'Can delete blog articles', 'Blog'),
   ('hubspot.view_crm', 'View HubSpot CRM', 'Can explore synced contacts, deals, and companies', 'HubSpot'),
@@ -82,10 +86,12 @@ CREATE TABLE IF NOT EXISTS admin_users (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   email VARCHAR(255) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
+  password_hash TEXT,
   role_id VARCHAR(64) REFERENCES roles(id) ON DELETE SET NULL,
   avatar_url TEXT,
   status VARCHAR(32) DEFAULT 'active',
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  last_login_at TIMESTAMP WITH TIME ZONE
 );
 
 -- 5. SELF-HOSTED EVENTS
@@ -139,7 +145,24 @@ CREATE TABLE IF NOT EXISTS memberships (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 8. HUBSPOT DEALS & SERVICES
+-- 8. HUBSPOT CONTACTS (FULL SYNC)
+CREATE TABLE IF NOT EXISTS hubspot_contacts (
+  id VARCHAR(64) PRIMARY KEY,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(64),
+  lifecycle_stage VARCHAR(64),
+  job_title VARCHAR(255),
+  company VARCHAR(255),
+  hub_location VARCHAR(255),
+  lead_source VARCHAR(255),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  synced_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 9. HUBSPOT DEALS & SERVICES
 CREATE TABLE IF NOT EXISTS hubspot_deals (
   id VARCHAR(64) PRIMARY KEY,
   deal_name VARCHAR(255) NOT NULL,
@@ -147,12 +170,13 @@ CREATE TABLE IF NOT EXISTS hubspot_deals (
   amount NUMERIC(12, 2) DEFAULT 0,
   currency VARCHAR(8) DEFAULT 'USD',
   close_date TIMESTAMP WITH TIME ZONE,
+  pipeline VARCHAR(128),
   service_type VARCHAR(128),
   partner_name VARCHAR(255),
   synced_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 9. HUBSPOT COMPANIES & HUBS
+-- 10. HUBSPOT COMPANIES & HUBS
 CREATE TABLE IF NOT EXISTS hubspot_companies (
   id VARCHAR(64) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -163,7 +187,7 @@ CREATE TABLE IF NOT EXISTS hubspot_companies (
   synced_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 10. HUBSPOT SYNC AUDIT LOGS
+-- 11. HUBSPOT SYNC AUDIT LOGS
 CREATE TABLE IF NOT EXISTS hubspot_sync_logs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   sync_type VARCHAR(64) NOT NULL,
