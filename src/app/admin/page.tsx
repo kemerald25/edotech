@@ -7,7 +7,6 @@ import {
   Database,
   Users,
   ArrowRight,
-  Plus,
   Sparkles,
 } from "lucide-react";
 import { getAllEvents } from "@/lib/data-store";

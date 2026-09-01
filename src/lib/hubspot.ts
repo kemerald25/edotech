@@ -236,8 +236,8 @@ const INITIAL_LOGS: HubSpotSyncLog[] = [
 // Live In-Memory Cache
 let liveContacts = [...INITIAL_CONTACTS];
 let liveDeals = [...INITIAL_DEALS];
-let liveCompanies = [...INITIAL_COMPANIES];
-let liveLogs = [...INITIAL_LOGS];
+const liveCompanies = [...INITIAL_COMPANIES];
+const liveLogs = [...INITIAL_LOGS];
 
 export async function syncHubSpotContacts(): Promise<HubSpotContact[]> {
   const token = process.env.HUBSPOT_ACCESS_TOKEN;

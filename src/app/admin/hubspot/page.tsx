@@ -5,13 +5,11 @@ import {
   RefreshCw,
   Search,
   CheckCircle2,
-  AlertCircle,
   Database,
   Building2,
   DollarSign,
   Users,
   ExternalLink,
-  Sparkles,
 } from "lucide-react";
 import { HubSpotContact, HubSpotDeal, HubSpotCompany, HubSpotSyncLog } from "@/lib/hubspot";
 

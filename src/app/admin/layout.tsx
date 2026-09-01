@@ -33,7 +33,7 @@ export const useAdmin = () => {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [roles, setRoles] = useState<Role[]>(() => getAllRoles());
+  const [roles] = useState<Role[]>(() => getAllRoles());
   const [currentUser, setCurrentUser] = useState<AdminUser>(() => getAdminUser("user-1")!);
   const [roleMenuOpen, setRoleMenuOpen] = useState(false);
 

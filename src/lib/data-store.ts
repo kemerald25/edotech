@@ -222,7 +222,7 @@ let liveRegistrations = [...INITIAL_REGISTRATIONS];
 let liveBlogPosts = [...INITIAL_BLOG_POSTS];
 let liveMemberships = [...INITIAL_MEMBERSHIPS];
 let liveRoles = [...INITIAL_ROLES];
-let liveUsers = [...INITIAL_ADMIN_USERS];
+const liveUsers = [...INITIAL_ADMIN_USERS];
 
 // ============ EVENTS CRUD ============
 export function getAllEvents(): PlatformEvent[] {
