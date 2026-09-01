@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-type Params = { params: { slug: string } };
+type Params = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -14,7 +14,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Params) {
-  const post = await getPost(params.slug).catch(() => null);
+  const { slug } = await params;
+  const post = await getPost(slug).catch(() => null);
   if (!post) return {};
   const url = `${siteConfig.url}/blog/${post.slug}`;
   return {
@@ -31,7 +32,8 @@ export async function generateMetadata({ params }: Params) {
 }
 
 export default async function BlogDetail({ params }: Params) {
-  const post = await getPost(params.slug).catch(() => null);
+  const { slug } = await params;
+  const post = await getPost(slug).catch(() => null);
   if (!post) return notFound();
 
   const shareUrl = encodeURIComponent(`${siteConfig.url}/blog/${post.slug}`);
