@@ -1,5 +1,7 @@
 import { INITIAL_ROLES, INITIAL_ADMIN_USERS, Role, AdminUser, PermissionKey } from "./permissions";
 
+export type { Role, AdminUser, PermissionKey } from "./permissions";
+
 export interface PlatformEvent {
   id: string;
   title: string;
@@ -63,7 +65,7 @@ export interface MembershipRecord {
   createdAt: string;
 }
 
-// Initial Data Seed
+// Initial Seed Data
 const INITIAL_EVENTS: PlatformEvent[] = [
   {
     id: "evt-1",
@@ -158,12 +160,7 @@ const INITIAL_BLOG_POSTS: DynamicBlogPost[] = [
     title: "AI Civic Labs are Reimagining Public Services in Edo",
     slug: "ai-civic-labs",
     excerpt: "From autonomous mobility pilots to regenerative agriculture dashboards, we document what happens when Edo technologists co-create with public institutions.",
-    content: `Edo Tech Community has spent the last year embedding AI civic labs inside local councils. Each lab pairs a designer, an engineer, and a policy champion to rewire service delivery.
-
-### What makes the lab model work?
-1. Shared briefs sourced from community assemblies.
-2. Transparent data rooms built on open standards.
-3. Rapid experimentation with weekly showcases to the public.`,
+    content: `Edo Tech Community has spent the last year embedding AI civic labs inside local councils. Each lab pairs a designer, an engineer, and a policy champion to rewire service delivery.`,
     author: "Imade Iyamu",
     authorRole: "Volunteer Research Lead",
     date: "Oct 12, 2025",
@@ -178,33 +175,13 @@ const INITIAL_BLOG_POSTS: DynamicBlogPost[] = [
     title: "Paty Futures: Building Equitable Tech Pipelines",
     slug: "paty-futures",
     excerpt: "We unpack how the Paty pipeline is nurturing multi-disciplinary builders and why Edo State is primed for frontier experimentation.",
-    content: `The Paty program is our flagship pathway that blends studio-based learning with deep community immersion.
-
-### Three things define Paty
-- Context-first research with local communities.
-- Mentor squads spanning product, design, policy, and governance.
-- Public showcases broadcasting progress every sprint.`,
+    content: `The Paty program is our flagship pathway that blends studio-based learning with deep community immersion.`,
     author: "Adaeze Uwa",
     authorRole: "Volunteer Writer",
     date: "Aug 30, 2025",
     readingTime: "3 min read",
     coverImage: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=1200&q=80",
     tags: ["paty", "programs", "talent"],
-    featured: false,
-    published: true,
-  },
-  {
-    id: "post-3",
-    title: "Designing the Edo Community Grid",
-    slug: "community-grid",
-    excerpt: "A behind-the-scenes look at the design language powering the Edo Community Grid across devices, kiosks, and XR canvases.",
-    content: `When we started the Community Grid initiative we knew the brand had to feel futuristic yet human. Our solution leans on glassmorphism, grid overlays, and subtle parallax cues.`,
-    author: "Boma Okei",
-    authorRole: "Design Guild Lead",
-    date: "Jun 18, 2025",
-    readingTime: "3 min read",
-    coverImage: "https://images.unsplash.com/photo-1526498460520-4c246339dccb?auto=format&fit=crop&w=1200&q=80",
-    tags: ["design", "accessibility", "systems"],
     featured: false,
     published: true,
   },
@@ -239,7 +216,7 @@ const INITIAL_MEMBERSHIPS: MembershipRecord[] = [
   },
 ];
 
-// In-Memory Live State
+// Live Mutable State
 let liveEvents = [...INITIAL_EVENTS];
 let liveRegistrations = [...INITIAL_REGISTRATIONS];
 let liveBlogPosts = [...INITIAL_BLOG_POSTS];
@@ -263,14 +240,20 @@ export function getFeaturedNextEvent(): PlatformEvent | undefined {
   );
 }
 
+export function getEventById(id: string): PlatformEvent | undefined {
+  return liveEvents.find((e) => e.id === id);
+}
+
 export function getEventBySlug(slug: string): PlatformEvent | undefined {
   return liveEvents.find((e) => e.slug === slug);
 }
 
-export function createEvent(event: Omit<PlatformEvent, "id" | "registeredCount" | "createdAt">): PlatformEvent {
+export function createEvent(event: Omit<PlatformEvent, "id" | "registeredCount" | "createdAt" | "slug"> & { slug?: string }): PlatformEvent {
+  const generatedSlug = event.slug || event.title.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-");
   const newEvent: PlatformEvent = {
     ...event,
     id: `evt-${Date.now()}`,
+    slug: generatedSlug,
     registeredCount: 0,
     createdAt: new Date().toISOString(),
   };
@@ -321,60 +304,76 @@ export function registerForEvent(payload: {
   return newReg;
 }
 
-export function getEventRegistrations(eventId?: string): EventRegistration[] {
+export function getAllRegistrations(eventId?: string): EventRegistration[] {
   if (eventId) {
     return liveRegistrations.filter((r) => r.eventId === eventId);
   }
   return liveRegistrations;
 }
 
+export const getEventRegistrations = getAllRegistrations;
+
 // ============ BLOG CRUD ============
-export function getAllBlogPosts(): DynamicBlogPost[] {
+export function getAllPosts(): DynamicBlogPost[] {
   return liveBlogPosts;
 }
+
+export const getAllBlogPosts = getAllPosts;
 
 export function getPublishedBlogPosts(): DynamicBlogPost[] {
   return liveBlogPosts.filter((p) => p.published);
 }
 
-export function createBlogPost(post: Omit<DynamicBlogPost, "id">): DynamicBlogPost {
+export function createPost(post: Omit<DynamicBlogPost, "id" | "slug" | "date" | "readingTime"> & { slug?: string }): DynamicBlogPost {
+  const slug = post.slug || post.title.toLowerCase().replace(/[^a-z0-9]/g, "-");
   const newPost: DynamicBlogPost = {
     ...post,
     id: `post-${Date.now()}`,
+    slug,
+    date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+    readingTime: `${Math.max(1, Math.ceil(post.content.split(" ").length / 200))} min read`,
   };
   liveBlogPosts = [newPost, ...liveBlogPosts];
   return newPost;
 }
 
-export function updateBlogPost(id: string, updates: Partial<DynamicBlogPost>): DynamicBlogPost | null {
+export const createBlogPost = createPost;
+
+export function updatePost(id: string, updates: Partial<DynamicBlogPost>): DynamicBlogPost | null {
   const idx = liveBlogPosts.findIndex((p) => p.id === id);
   if (idx === -1) return null;
   liveBlogPosts[idx] = { ...liveBlogPosts[idx], ...updates };
   return liveBlogPosts[idx];
 }
 
-export function deleteBlogPost(id: string): boolean {
+export const updateBlogPost = updatePost;
+
+export function deletePost(id: string): boolean {
   const initialLen = liveBlogPosts.length;
   liveBlogPosts = liveBlogPosts.filter((p) => p.id !== id);
   return liveBlogPosts.length < initialLen;
 }
+
+export const deleteBlogPost = deletePost;
 
 // ============ MEMBERSHIP CRUD ============
 export function getAllMemberships(): MembershipRecord[] {
   return liveMemberships;
 }
 
-export function createMembership(data: Omit<MembershipRecord, "id" | "status" | "hubspotSynced" | "createdAt">): MembershipRecord {
+export function registerMembership(data: Omit<MembershipRecord, "id" | "status" | "hubspotSynced" | "createdAt"> & { status?: MembershipRecord["status"] }): MembershipRecord {
   const newMem: MembershipRecord = {
     ...data,
     id: `mem-${Date.now()}`,
-    status: "active",
+    status: data.status || "active",
     hubspotSynced: true,
     createdAt: new Date().toISOString(),
   };
   liveMemberships = [newMem, ...liveMemberships];
   return newMem;
 }
+
+export const createMembership = registerMembership;
 
 // ============ ROLES & PERMISSIONS CRUD ============
 export function getAllRoles(): Role[] {
@@ -385,7 +384,7 @@ export function getRoleById(roleId: string): Role | undefined {
   return liveRoles.find((r) => r.id === roleId);
 }
 
-export function createRole(data: { name: string; description: string; permissions: PermissionKey[] }): Role {
+export function createCustomRole(data: { name: string; description: string; permissions: PermissionKey[] }): Role {
   const slug = data.name.toLowerCase().replace(/[^a-z0-9]/g, "_");
   const newRole: Role = {
     id: slug || `role_${Date.now()}`,
@@ -399,23 +398,24 @@ export function createRole(data: { name: string; description: string; permission
   return newRole;
 }
 
-export function updateRole(roleId: string, updates: Partial<Omit<Role, "id" | "isSystem">>): Role | null {
-  const idx = liveRoles.findIndex((r) => r.id === roleId);
-  if (idx === -1) return null;
-  liveRoles[idx] = { ...liveRoles[idx], ...updates };
-  return liveRoles[idx];
-}
+export const createRole = createCustomRole;
 
-export function deleteRole(roleId: string): boolean {
+export function deleteCustomRole(roleId: string): boolean {
   const role = liveRoles.find((r) => r.id === roleId);
   if (!role || role.isSystem) return false;
   liveRoles = liveRoles.filter((r) => r.id !== roleId);
   return true;
 }
 
+export const deleteRole = deleteCustomRole;
+
 // ============ ADMIN USERS CRUD ============
 export function getAllAdminUsers(): AdminUser[] {
   return liveUsers;
+}
+
+export function getAdminUser(userId: string): AdminUser | undefined {
+  return liveUsers.find((u) => u.id === userId) || liveUsers[0];
 }
 
 export function assignUserRole(userId: string, roleId: string): AdminUser | null {

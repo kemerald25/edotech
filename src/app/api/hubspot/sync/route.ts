@@ -1,63 +1,66 @@
 import { NextResponse } from "next/server";
 import {
-  getHubspotContacts,
-  getHubspotDeals,
-  getHubspotCompanies,
-  getHubspotSyncLogs,
-  triggerFullSync,
+  syncHubSpotContacts,
+  syncHubSpotDeals,
+  syncHubSpotCompanies,
+  getAllHubSpotData,
 } from "@/lib/hubspot";
 
 export async function GET() {
   try {
-    const [contacts, deals, companies, logs] = await Promise.all([
-      getHubspotContacts(),
-      getHubspotDeals(),
-      getHubspotCompanies(),
-      getHubspotSyncLogs(),
-    ]);
-
+    const data = getAllHubSpotData();
     return NextResponse.json({
       success: true,
-      data: {
-        contacts,
-        deals,
-        companies,
-        logs,
-      },
+      data,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to load CRM data";
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to fetch HubSpot CRM data" },
-      { status: 500 },
+      { success: false, error: message },
+      { status: 500 }
     );
   }
 }
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
-    const result = await triggerFullSync();
-    const [contacts, deals, companies, logs] = await Promise.all([
-      getHubspotContacts(),
-      getHubspotDeals(),
-      getHubspotCompanies(),
-      getHubspotSyncLogs(),
-    ]);
+    const body = await req.json().catch(() => ({}));
+    const { entityType = "all" } = body;
+
+    let contactsCount = 0;
+    let dealsCount = 0;
+    let companiesCount = 0;
+
+    if (entityType === "all" || entityType === "contacts") {
+      const contacts = await syncHubSpotContacts();
+      contactsCount = contacts.length;
+    }
+
+    if (entityType === "all" || entityType === "deals") {
+      const deals = await syncHubSpotDeals();
+      dealsCount = deals.length;
+    }
+
+    if (entityType === "all" || entityType === "companies") {
+      const companies = await syncHubSpotCompanies();
+      companiesCount = companies.length;
+    }
 
     return NextResponse.json({
       success: true,
-      message: "Full synchronization with HubSpot CRM completed successfully.",
-      result,
-      data: {
-        contacts,
-        deals,
-        companies,
-        logs,
+      message: "HubSpot sync completed successfully",
+      summary: {
+        contactsCount,
+        dealsCount,
+        companiesCount,
+        timestamp: new Date().toISOString(),
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Sync error";
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to execute HubSpot sync" },
-      { status: 500 },
+      { success: false, error: message },
+      { status: 500 }
     );
   }
 }

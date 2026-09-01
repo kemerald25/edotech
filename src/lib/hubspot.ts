@@ -1,30 +1,31 @@
-export interface HubspotContact {
+export interface HubSpotContact {
   id: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone?: string;
-  lifecyclestage?: string;
-  jobtitle?: string;
+  lifecycleStage?: string;
+  jobTitle?: string;
   company?: string;
   hubLocation?: string;
-  hsCreatedate: string;
-  hsLastmodifieddate: string;
+  leadSource?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface HubspotDeal {
+export interface HubSpotDeal {
   id: string;
-  dealname: string;
+  dealName: string;
   amount: number;
   currency: string;
-  dealstage: string;
-  closedate?: string;
-  pipeline?: string;
+  dealStage: string;
+  closeDate?: string;
+  pipeline: string;
   serviceType: string;
   partnerOrg: string;
 }
 
-export interface HubspotCompany {
+export interface HubSpotCompany {
   id: string;
   name: string;
   domain?: string;
@@ -34,133 +35,147 @@ export interface HubspotCompany {
   phone?: string;
 }
 
-export interface HubspotSyncLog {
+export interface HubSpotSyncLog {
   id: string;
-  syncType: "contacts" | "deals" | "companies" | "full";
+  entityType: "contacts" | "deals" | "companies" | "all";
   recordsProcessed: number;
-  recordsSynced: number;
-  status: "success" | "warning" | "failed";
+  status: "synced" | "failed" | "pending";
   timestamp: string;
-  details: string;
+  details?: string;
 }
+
+// Aliases for compatibility
+export type HubspotContact = HubSpotContact;
+export type HubspotDeal = HubSpotDeal;
+export type HubspotCompany = HubSpotCompany;
+export type HubspotSyncLog = HubSpotSyncLog;
 
 export const HUBSPOT_PORTAL_ID = process.env.NEXT_PUBLIC_HUBSPOT_PORTAL_ID || "27244747";
 export const HUBSPOT_FORM_ID = process.env.NEXT_PUBLIC_HUBSPOT_FORM_ID || "5c746a65-8833-4de3-beec-03dce910dacf";
 export const HUBSPOT_REGION = process.env.NEXT_PUBLIC_HUBSPOT_REGION || "eu1";
 
-// Mock Fallback Data representing live HubSpot CRM state
-const INITIAL_HUBSPOT_CONTACTS: HubspotContact[] = [
+// Initial Mock Seed representing live synced state
+const INITIAL_CONTACTS: HubSpotContact[] = [
   {
     id: "hs-101",
-    firstname: "Efe",
-    lastname: "Osazuwa",
+    firstName: "Efe",
+    lastName: "Osazuwa",
     email: "efe@solgrid.africa",
     phone: "+234 802 123 4567",
-    lifecyclestage: "customer",
-    jobtitle: "Founder & CEO",
+    lifecycleStage: "customer",
+    jobTitle: "Founder & CEO",
     company: "SolGrid Systems",
     hubLocation: "Benin City Hub",
-    hsCreatedate: "2026-01-14T09:30:00Z",
-    hsLastmodifieddate: "2026-08-20T14:15:00Z",
+    leadSource: "Join Form",
+    createdAt: "2026-01-14T09:30:00Z",
+    updatedAt: "2026-08-20T14:15:00Z",
   },
   {
     id: "hs-102",
-    firstname: "Mary",
-    lastname: "Asemota",
+    firstName: "Mary",
+    lastName: "Asemota",
     email: "mary.asemota@edogov.ng",
     phone: "+234 803 987 6543",
-    lifecyclestage: "opportunity",
-    jobtitle: "Civic Policy Lead",
+    lifecycleStage: "opportunity",
+    jobTitle: "Civic Policy Lead",
     company: "Edo State Ministry of Digital Economy",
     hubLocation: "Benin City Hub",
-    hsCreatedate: "2026-02-10T11:00:00Z",
-    hsLastmodifieddate: "2026-08-25T16:40:00Z",
+    leadSource: "Event RSVP",
+    createdAt: "2026-02-10T11:00:00Z",
+    updatedAt: "2026-08-25T16:40:00Z",
   },
   {
     id: "hs-103",
-    firstname: "Osamudiamen",
-    lastname: "Igbinosa",
+    firstName: "Osamudiamen",
+    lastName: "Igbinosa",
     email: "osamudiamen@futurestack.io",
     phone: "+234 805 555 1212",
-    lifecyclestage: "lead",
-    jobtitle: "Senior AI Engineer",
+    lifecycleStage: "lead",
+    jobTitle: "Senior AI Engineer",
     company: "FutureStack Labs",
     hubLocation: "Auchi Remote Pod",
-    hsCreatedate: "2026-03-05T15:20:00Z",
-    hsLastmodifieddate: "2026-08-29T10:10:00Z",
+    leadSource: "Community Referral",
+    createdAt: "2026-03-05T15:20:00Z",
+    updatedAt: "2026-08-29T10:10:00Z",
   },
   {
     id: "hs-104",
-    firstname: "Blessing",
-    lastname: "Okojie",
+    firstName: "Blessing",
+    lastName: "Okojie",
     email: "blessing.o@diamundlabs.com",
     phone: "+234 810 444 8899",
-    lifecyclestage: "customer",
-    jobtitle: "Hardware Resident",
+    lifecycleStage: "customer",
+    jobTitle: "Hardware Resident",
     company: "Diamund Labs",
     hubLocation: "Benin City Hub",
-    hsCreatedate: "2026-04-12T08:45:00Z",
-    hsLastmodifieddate: "2026-08-30T11:30:00Z",
+    leadSource: "Fellowship Application",
+    createdAt: "2026-04-12T08:45:00Z",
+    updatedAt: "2026-08-30T11:30:00Z",
   },
   {
     id: "hs-105",
-    firstname: "Victor",
-    lastname: "Edokpayi",
+    firstName: "Victor",
+    lastName: "Edokpayi",
     email: "victor@victorventures.co",
     phone: "+234 818 777 3322",
-    lifecyclestage: "evangelist",
-    jobtitle: "Managing Partner",
+    lifecycleStage: "evangelist",
+    jobTitle: "Managing Partner",
     company: "Victor Ventures",
     hubLocation: "Diaspora / Remote",
-    hsCreatedate: "2026-05-18T13:10:00Z",
-    hsLastmodifieddate: "2026-08-31T09:00:00Z",
+    leadSource: "Partner Submission",
+    createdAt: "2026-05-18T13:10:00Z",
+    updatedAt: "2026-08-31T09:00:00Z",
   },
 ];
 
-const INITIAL_HUBSPOT_DEALS: HubspotDeal[] = [
+const INITIAL_DEALS: HubSpotDeal[] = [
   {
     id: "deal-001",
-    dealname: "2026 Grid Festival Title Sponsorship",
+    dealName: "2026 Grid Festival Title Sponsorship",
     amount: 25000,
     currency: "USD",
-    dealstage: "closedwon",
-    closedate: "2026-11-15T00:00:00Z",
+    dealStage: "closedwon",
+    closeDate: "2026-11-15T00:00:00Z",
+    pipeline: "partnerships",
     serviceType: "Festival Sponsorship & Keynote",
     partnerOrg: "Diamund Labs",
   },
   {
     id: "deal-002",
-    dealname: "Civic AI Fellowship Residency Grant",
+    dealName: "Civic AI Fellowship Residency Grant",
     amount: 15000,
     currency: "USD",
-    dealstage: "contractsent",
-    closedate: "2026-10-01T00:00:00Z",
+    dealStage: "contractsent",
+    closeDate: "2026-10-01T00:00:00Z",
+    pipeline: "grants",
     serviceType: "Talent Residency & Fellowship",
     partnerOrg: "Edo Innovators Studio",
   },
   {
     id: "deal-003",
-    dealname: "Hub Fiber Bandwidth & Cloud Credits Grant",
+    dealName: "Hub Fiber Bandwidth & Cloud Credits Grant",
     amount: 8500,
     currency: "USD",
-    dealstage: "closedwon",
-    closedate: "2026-01-20T00:00:00Z",
+    dealStage: "closedwon",
+    closeDate: "2026-01-20T00:00:00Z",
+    pipeline: "infrastructure",
     serviceType: "Infrastructure & Bandwidth Subsidy",
     partnerOrg: "Benin Connect ISP",
   },
   {
     id: "deal-004",
-    dealname: "Paty Sprint Seed Fund Pool",
+    dealName: "Paty Sprint Seed Fund Pool",
     amount: 12000,
     currency: "USD",
-    dealstage: "presentationscheduled",
-    closedate: "2026-12-05T00:00:00Z",
+    dealStage: "presentationscheduled",
+    closeDate: "2026-12-05T00:00:00Z",
+    pipeline: "paty_sprints",
     serviceType: "Prototyping Grants",
     partnerOrg: "Empower Circle",
   },
 ];
 
-const INITIAL_HUBSPOT_COMPANIES: HubspotCompany[] = [
+const INITIAL_COMPANIES: HubSpotCompany[] = [
   {
     id: "comp-01",
     name: "Diamund Labs",
@@ -199,219 +214,184 @@ const INITIAL_HUBSPOT_COMPANIES: HubspotCompany[] = [
   },
 ];
 
-const INITIAL_SYNC_LOGS: HubspotSyncLog[] = [
+const INITIAL_LOGS: HubSpotSyncLog[] = [
   {
     id: "log-1",
-    syncType: "full",
+    entityType: "all",
     recordsProcessed: 48,
-    recordsSynced: 48,
-    status: "success",
+    status: "synced",
     timestamp: "2026-09-01T12:00:00Z",
     details: "Full synchronization completed: 32 contacts, 4 deals, 12 companies.",
   },
   {
     id: "log-2",
-    syncType: "contacts",
+    entityType: "contacts",
     recordsProcessed: 6,
-    recordsSynced: 6,
-    status: "success",
+    status: "synced",
     timestamp: "2026-09-01T13:30:00Z",
     details: "Incremental sync: 6 new event registrations pushed to HubSpot portal 27244747.",
   },
 ];
 
-// In-memory synced state for dynamic admin operations
-let liveContacts = [...INITIAL_HUBSPOT_CONTACTS];
-let liveDeals = [...INITIAL_HUBSPOT_DEALS];
-let liveCompanies = [...INITIAL_HUBSPOT_COMPANIES];
-let liveLogs = [...INITIAL_SYNC_LOGS];
+// Live In-Memory Cache
+let liveContacts = [...INITIAL_CONTACTS];
+let liveDeals = [...INITIAL_DEALS];
+let liveCompanies = [...INITIAL_COMPANIES];
+let liveLogs = [...INITIAL_LOGS];
 
-/**
- * Fetch all synced contacts from HubSpot (or live cache)
- */
-export async function getHubspotContacts(): Promise<HubspotContact[]> {
+export async function syncHubSpotContacts(): Promise<HubSpotContact[]> {
   const token = process.env.HUBSPOT_ACCESS_TOKEN;
   if (token) {
     try {
-      const res = await fetch("https://api.hubapi.com/crm/v3/objects/contacts?limit=100&properties=firstname,lastname,email,phone,lifecyclestage,jobtitle,company", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        next: { revalidate: 60 },
-      });
+      const res = await fetch(
+        "https://api.hubapi.com/crm/v3/objects/contacts?limit=100&properties=firstname,lastname,email,phone,lifecyclestage,jobtitle,company",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (res.ok) {
         const data = await res.json();
-        return data.results.map((c: any) => ({
+        interface RawContact {
+          id: string;
+          properties: Record<string, string>;
+          createdAt: string;
+          updatedAt: string;
+        }
+        liveContacts = data.results.map((c: RawContact) => ({
           id: c.id,
-          firstname: c.properties.firstname || "",
-          lastname: c.properties.lastname || "",
+          firstName: c.properties.firstname || "",
+          lastName: c.properties.lastname || "",
           email: c.properties.email || "",
           phone: c.properties.phone || "",
-          lifecyclestage: c.properties.lifecyclestage || "lead",
-          jobtitle: c.properties.jobtitle || "",
+          lifecycleStage: c.properties.lifecyclestage || "lead",
+          jobTitle: c.properties.jobtitle || "",
           company: c.properties.company || "",
-          hsCreatedate: c.createdAt,
-          hsLastmodifieddate: c.updatedAt,
+          leadSource: "HubSpot CRM",
+          createdAt: c.createdAt,
+          updatedAt: c.updatedAt,
         }));
       }
-    } catch (err) {
-      console.warn("HubSpot API live request failed, using synced local store", err);
+    } catch {
+      // Fallback
     }
   }
   return liveContacts;
 }
 
-/**
- * Fetch all synced deals / services from HubSpot
- */
-export async function getHubspotDeals(): Promise<HubspotDeal[]> {
+export async function syncHubSpotDeals(): Promise<HubSpotDeal[]> {
   const token = process.env.HUBSPOT_ACCESS_TOKEN;
   if (token) {
     try {
-      const res = await fetch("https://api.hubapi.com/crm/v3/objects/deals?limit=100&properties=dealname,amount,dealstage,closedate,pipeline", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        next: { revalidate: 60 },
-      });
+      const res = await fetch(
+        "https://api.hubapi.com/crm/v3/objects/deals?limit=100&properties=dealname,amount,dealstage,closedate,pipeline",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (res.ok) {
         const data = await res.json();
-        return data.results.map((d: any) => ({
+        interface RawDeal {
+          id: string;
+          properties: Record<string, string>;
+        }
+        liveDeals = data.results.map((d: RawDeal) => ({
           id: d.id,
-          dealname: d.properties.dealname || "Partnership Engagement",
+          dealName: d.properties.dealname || "Partnership Agreement",
           amount: parseFloat(d.properties.amount || "0"),
           currency: "USD",
-          dealstage: d.properties.dealstage || "appointmentscheduled",
-          closedate: d.properties.closedate,
+          dealStage: d.properties.dealstage || "appointmentscheduled",
+          closeDate: d.properties.closedate,
+          pipeline: d.properties.pipeline || "default",
           serviceType: "Ecosystem Service / Sponsorship",
           partnerOrg: d.properties.dealname || "Partner",
         }));
       }
-    } catch (err) {
-      console.warn("HubSpot Deals API live request failed, using synced local store", err);
+    } catch {
+      // Fallback
     }
   }
   return liveDeals;
 }
 
-/**
- * Fetch all synced companies from HubSpot
- */
-export async function getHubspotCompanies(): Promise<HubspotCompany[]> {
+export async function syncHubSpotCompanies(): Promise<HubSpotCompany[]> {
   return liveCompanies;
 }
 
-/**
- * Fetch Sync Logs
- */
-export async function getHubspotSyncLogs(): Promise<HubspotSyncLog[]> {
-  return liveLogs;
+export function getAllHubSpotData() {
+  return {
+    contacts: liveContacts,
+    deals: liveDeals,
+    companies: liveCompanies,
+    logs: liveLogs,
+  };
 }
 
-/**
- * Submit public form data directly to HubSpot Forms Submission API
- */
-export async function submitHubspotFormPayload(payload: {
+export async function submitHubSpotForm(payload: {
+  email: string;
   firstname: string;
   lastname?: string;
-  email: string;
   phone?: string;
-  discipline?: string;
-  interest?: string;
-  portalId?: string;
-  formId?: string;
+  jobtitle?: string;
+  message?: string;
 }) {
-  const portalId = payload.portalId || HUBSPOT_PORTAL_ID;
-  const formId = payload.formId || HUBSPOT_FORM_ID;
-  const region = HUBSPOT_REGION;
-
-  const endpoint =
-    region === "eu1"
-      ? `https://api-eu1.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`
-      : `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
+  const portalId = HUBSPOT_PORTAL_ID;
+  const formId = HUBSPOT_FORM_ID;
+  const endpoint = `https://api-eu1.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
 
   const fields = [
+    { name: "email", value: payload.email },
     { name: "firstname", value: payload.firstname },
     { name: "lastname", value: payload.lastname || "" },
-    { name: "email", value: payload.email },
   ];
 
   if (payload.phone) fields.push({ name: "phone", value: payload.phone });
-  if (payload.discipline) fields.push({ name: "jobtitle", value: payload.discipline });
-  if (payload.interest) fields.push({ name: "message", value: payload.interest });
+  if (payload.jobtitle) fields.push({ name: "jobtitle", value: payload.jobtitle });
+  if (payload.message) fields.push({ name: "message", value: payload.message });
 
-  // Record contact in local cache
-  const newContact: HubspotContact = {
+  // Update local in-memory contact record
+  const newContact: HubSpotContact = {
     id: `hs-${Date.now()}`,
-    firstname: payload.firstname,
-    lastname: payload.lastname || "",
+    firstName: payload.firstname,
+    lastName: payload.lastname || "",
     email: payload.email,
     phone: payload.phone || "",
-    lifecyclestage: "lead",
-    jobtitle: payload.discipline || "Community Member",
+    lifecycleStage: "lead",
+    jobTitle: payload.jobtitle || "Community Member",
     company: "Edo Tech Member",
     hubLocation: "Benin City",
-    hsCreatedate: new Date().toISOString(),
-    hsLastmodifieddate: new Date().toISOString(),
+    leadSource: "Website Submission",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   };
   liveContacts = [newContact, ...liveContacts];
 
   try {
     const res = await fetch(endpoint, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         fields,
         context: {
-          pageUri: "https://edotech.community/join",
-          pageName: "Join Edo Tech Community",
+          pageUri: "https://edotech.community",
+          pageName: "Edo Tech Community",
         },
       }),
     });
-
-    return {
-      success: res.ok,
-      status: res.status,
-    };
-  } catch (err) {
-    // Graceful offline fallback
-    return {
-      success: true,
-      cachedLocally: true,
-    };
+    return { success: res.ok };
+  } catch {
+    return { success: true, cachedLocally: true };
   }
 }
 
-/**
- * Execute full account sync
- */
-export async function triggerFullSync(): Promise<{
-  success: boolean;
-  contactsCount: number;
-  dealsCount: number;
-  companiesCount: number;
-}> {
-  const timestamp = new Date().toISOString();
-  const newLog: HubspotSyncLog = {
-    id: `log-${Date.now()}`,
-    syncType: "full",
-    recordsProcessed: liveContacts.length + liveDeals.length + liveCompanies.length,
-    recordsSynced: liveContacts.length + liveDeals.length + liveCompanies.length,
-    status: "success",
-    timestamp,
-    details: `Full HubSpot synchronization refreshed ${liveContacts.length} contacts, ${liveDeals.length} deals/services, and ${liveCompanies.length} companies.`,
-  };
-
-  liveLogs = [newLog, ...liveLogs];
-
-  return {
-    success: true,
-    contactsCount: liveContacts.length,
-    dealsCount: liveDeals.length,
-    companiesCount: liveCompanies.length,
-  };
-}
+// Aliases
+export const getHubspotContacts = syncHubSpotContacts;
+export const getHubspotDeals = syncHubSpotDeals;
+export const getHubspotCompanies = syncHubSpotCompanies;
+export const getHubspotSyncLogs = () => liveLogs;
+export const submitHubspotFormPayload = submitHubSpotForm;

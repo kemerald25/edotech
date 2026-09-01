@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { registerForEvent } from "@/lib/data-store";
-import { submitHubspotFormPayload } from "@/lib/hubspot";
+import { registerForEvent, getEventById } from "@/lib/data-store";
+import { submitHubSpotForm } from "@/lib/hubspot";
 
 export async function POST(req: Request) {
   try {
@@ -9,44 +9,50 @@ export async function POST(req: Request) {
 
     if (!eventId || !name || !email) {
       return NextResponse.json(
-        { success: false, error: "Missing required fields: eventId, name, email" },
-        { status: 400 },
+        { success: false, error: "Missing required fields: eventId, name, or email" },
+        { status: 400 }
       );
     }
 
-    // 1. Record registration in local database
+    const event = getEventById(eventId);
+    if (!event) {
+      return NextResponse.json(
+        { success: false, error: "Event not found" },
+        { status: 404 }
+      );
+    }
+
+    // 1. Record registration in local database store
     const registration = registerForEvent({
       eventId,
       name,
       email,
       phone,
-      role: role || "Attendee",
+      role: role || "Developer / Engineer",
       attendanceMode: attendanceMode || "in-person",
     });
 
-    // 2. Sync lead to HubSpot Forms API in background
-    const nameParts = name.trim().split(" ");
-    const firstname = nameParts[0] || name;
-    const lastname = nameParts.slice(1).join(" ");
-
-    await submitHubspotFormPayload({
-      firstname,
-      lastname,
+    // 2. Sync lead to HubSpot Form API endpoint
+    await submitHubSpotForm({
       email,
-      phone,
-      discipline: role,
-      interest: `Event RSVP: ${registration.eventTitle} (${attendanceMode})`,
+      firstname: name.split(" ")[0] || name,
+      lastname: name.split(" ").slice(1).join(" ") || "",
+      phone: phone || "",
+      jobtitle: role || "Developer / Engineer",
+      message: `Registered for event: ${event.title} (${attendanceMode || "in-person"})`,
     });
 
     return NextResponse.json({
       success: true,
       registration,
-      message: "RSVP confirmed! Your registration has been synced.",
+      eventTitle: event.title,
+      message: `Successfully registered for ${event.title}`,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Internal Server Error";
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to register for event" },
-      { status: 500 },
+      { success: false, error: message },
+      { status: 500 }
     );
   }
 }

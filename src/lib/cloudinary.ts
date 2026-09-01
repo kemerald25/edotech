@@ -23,8 +23,6 @@ export async function uploadToCloudinary(
   folder: "events" | "blog" | "members" | "partners" = "events",
 ): Promise<CloudinaryUploadResult> {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME || CLOUDINARY_CLOUD_NAME;
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
   const endpoint = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
 

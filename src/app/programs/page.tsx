@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { programs } from "@/data/site-data";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { EventCalendar } from "@/components/programs/event-calendar";
 import { PastEventGallery } from "@/components/programs/past-event-gallery";
 import { EventRegistrationModal } from "@/components/programs/event-registration-modal";
 import { getAllEvents, PlatformEvent } from "@/lib/data-store";
-import { Calendar, MapPin, Sparkles, ArrowRight, Video, Users } from "lucide-react";
+import { Calendar, MapPin, Sparkles, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
 export default function ProgramsPage() {

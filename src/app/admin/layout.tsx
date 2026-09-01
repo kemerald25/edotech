@@ -1,219 +1,214 @@
 "use client";
 
-import { useEffect, useState, createContext, useContext } from "react";
+import { useState, createContext, useContext } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Shield,
   Calendar,
   FileText,
-  Users,
-  Shield,
   Database,
-  ArrowLeft,
-  Sparkles,
-  RefreshCw,
-  LogOut,
-  ChevronRight,
-  Menu,
-  X,
+  Users,
+  LayoutDashboard,
+  ShieldCheck,
+  CheckCircle2,
 } from "lucide-react";
-import { Role, INITIAL_ROLES, hasPermission, PermissionKey } from "@/lib/permissions";
+import { PermissionId, RoleId, hasPermission } from "@/lib/permissions";
+import { getAllRoles, getAdminUser, AdminUser, Role } from "@/lib/data-store";
 
 interface AdminContextType {
-  currentRole: Role;
-  setCurrentRole: (role: Role) => void;
-  can: (permission: PermissionKey) => boolean;
+  currentUser: AdminUser;
+  roles: Role[];
+  switchRole: (roleId: RoleId) => void;
+  can: (permission: PermissionId) => boolean;
 }
 
-const AdminContext = createContext<AdminContextType>({
-  currentRole: INITIAL_ROLES[0],
-  setCurrentRole: () => {},
-  can: () => true,
-});
+const AdminContext = createContext<AdminContextType | null>(null);
 
-export const useAdmin = () => useContext(AdminContext);
+export const useAdmin = () => {
+  const context = useContext(AdminContext);
+  if (!context) throw new Error("useAdmin must be used within AdminLayout");
+  return context;
+};
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [currentRole, setCurrentRole] = useState<Role>(INITIAL_ROLES[0]);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [roles, setRoles] = useState<Role[]>(() => getAllRoles());
+  const [currentUser, setCurrentUser] = useState<AdminUser>(() => getAdminUser("user-1")!);
+  const [roleMenuOpen, setRoleMenuOpen] = useState(false);
 
-  // Helper to check permission
-  const can = (permission: PermissionKey) => {
-    return hasPermission(currentRole, permission);
+  const can = (permission: PermissionId) => {
+    return hasPermission(currentUser.assignedRoles, permission);
+  };
+
+  const switchRole = (roleId: RoleId) => {
+    setCurrentUser((prev) => ({
+      ...prev,
+      assignedRoles: [roleId],
+    }));
+    setRoleMenuOpen(false);
   };
 
   const navItems = [
     {
-      label: "Dashboard",
+      label: "Overview",
       href: "/admin",
-      icon: Sparkles,
-      visible: true,
+      icon: LayoutDashboard,
+      show: true,
     },
     {
       label: "Events & RSVPs",
       href: "/admin/events",
       icon: Calendar,
-      visible: can("events.create") || can("events.edit") || can("events.view_attendees"),
-      badge: "Hosting",
+      show: can("events.create") || can("events.edit") || can("events.view_attendees"),
+      badge: "Native",
+    },
+    {
+      label: "Writer Studio",
+      href: "/admin/blog",
+      icon: FileText,
+      show: can("blog.create") || can("blog.edit"),
+      badge: "MDX",
     },
     {
       label: "HubSpot CRM",
       href: "/admin/hubspot",
       icon: Database,
-      visible: can("hubspot.view_crm") || can("hubspot.trigger_sync"),
-      badge: "Synced",
-    },
-    {
-      label: "Blog & Publications",
-      href: "/admin/blog",
-      icon: FileText,
-      visible: can("blog.create") || can("blog.edit"),
-      badge: "Writers",
-    },
-    {
-      label: "Members & Leads",
-      href: "/admin/members",
-      icon: Users,
-      visible: can("members.view") || can("members.manage"),
+      show: can("hubspot.view_crm"),
+      badge: "Live API",
     },
     {
       label: "Roles & Permissions",
       href: "/admin/roles",
       icon: Shield,
-      visible: can("roles.manage") || can("users.manage"),
-      badge: "Super Admin",
+      show: can("roles.manage"),
+      badge: "RBAC",
+    },
+    {
+      label: "Members Guild",
+      href: "/admin/members",
+      icon: Users,
+      show: can("members.view"),
     },
   ];
 
   return (
-    <AdminContext.Provider value={{ currentRole, setCurrentRole, can }}>
-      <div className="min-h-screen bg-[#07090E] text-white flex flex-col md:flex-row">
-        {/* Mobile Header */}
-        <div className="md:hidden flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/60 backdrop-blur-md sticky top-0 z-40">
-          <div className="flex items-center gap-3">
-            <div className="size-8 rounded-xl bg-secondary flex items-center justify-center font-bold text-black text-sm">
-              ETC
-            </div>
-            <div>
-              <p className="text-sm font-bold text-white leading-none">Edo Tech Admin</p>
-              <p className="text-[11px] text-secondary mt-0.5">{currentRole.name}</p>
-            </div>
-          </div>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 rounded-xl bg-white/5 border border-white/10 text-neutral-300"
-          >
-            {sidebarOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
-        </div>
-
+    <AdminContext.Provider value={{ currentUser, roles, switchRole, can }}>
+      <div className="flex min-h-screen bg-[#07090E] text-white">
         {/* Sidebar */}
-        <aside
-          className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#0B0E17]/95 border-r border-white/10 p-6 flex flex-col justify-between backdrop-blur-xl transition-transform duration-300 md:translate-x-0 md:static ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="space-y-6">
-            {/* Brand Logo */}
-            <div className="flex items-center justify-between">
-              <Link href="/admin" className="flex items-center gap-3 group">
-                <div className="size-10 rounded-2xl bg-gradient-to-tr from-primary to-secondary p-0.5 shadow-glow">
-                  <div className="w-full h-full bg-black rounded-[14px] flex items-center justify-center font-bold text-secondary text-sm">
-                    ETC
-                  </div>
+        <aside className="w-72 border-r border-white/10 bg-[#0B0E17] flex flex-col justify-between p-6 shrink-0">
+          <div className="space-y-8">
+            {/* Logo & Portal Badge */}
+            <div className="space-y-2">
+              <Link href="/" className="inline-flex items-center gap-2 text-xs text-neutral-400 hover:text-white transition">
+                <span>← Back to Public Website</span>
+              </Link>
+              <div className="flex items-center gap-3 pt-2">
+                <div className="size-10 rounded-2xl bg-secondary/15 border border-secondary/40 flex items-center justify-center text-secondary">
+                  <ShieldCheck className="size-6" />
                 </div>
                 <div>
-                  <h1 className="font-heading font-bold text-base text-white tracking-wide">
-                    Edo Tech Guild
-                  </h1>
-                  <p className="text-[11px] text-neutral-400">Admin Ecosystem</p>
+                  <h2 className="font-heading text-base font-bold text-white leading-tight">
+                    Edo Tech Admin
+                  </h2>
+                  <p className="text-[11px] text-neutral-400">Ecosystem Engine</p>
                 </div>
-              </Link>
+              </div>
             </div>
 
-            {/* Active Role Selector Tool */}
-            <div className="rounded-2xl border border-secondary/30 bg-secondary/10 p-3.5 space-y-2">
-              <div className="flex items-center justify-between text-xs text-secondary font-medium">
-                <span className="flex items-center gap-1.5">
-                  <Shield className="size-3.5" />
-                  Active Role
-                </span>
-                <span className="text-[10px] uppercase tracking-wider bg-secondary/20 px-2 py-0.5 rounded-full">
-                  RBAC Mode
-                </span>
-              </div>
-              <select
-                value={currentRole.id}
-                onChange={(e) => {
-                  const selected = INITIAL_ROLES.find((r) => r.id === e.target.value);
-                  if (selected) setCurrentRole(selected);
-                }}
-                className="w-full bg-black/60 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-secondary transition cursor-pointer"
+            {/* Current Active Role Switcher */}
+            <div className="relative">
+              <p className="text-[10px] uppercase font-semibold tracking-wider text-neutral-400 mb-2">
+                Simulate / Active Role
+              </p>
+              <button
+                onClick={() => setRoleMenuOpen(!roleMenuOpen)}
+                className="w-full flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/10 hover:border-secondary/40 transition text-left"
               >
-                {INITIAL_ROLES.map((r) => (
-                  <option key={r.id} value={r.id} className="bg-[#0B0E17] text-white">
-                    {r.name}
-                  </option>
-                ))}
-              </select>
+                <div>
+                  <p className="text-xs font-bold text-secondary">
+                    {roles.find((r) => r.id === currentUser.assignedRoles[0])?.name || currentUser.assignedRoles[0]}
+                  </p>
+                  <p className="text-[10px] text-neutral-400">Click to switch testing role</p>
+                </div>
+                <span className="text-xs text-neutral-400">▼</span>
+              </button>
+
+              {roleMenuOpen && (
+                <div className="absolute top-full left-0 right-0 mt-2 z-50 rounded-2xl bg-[#0E121E] border border-white/10 p-2 shadow-2xl space-y-1">
+                  {roles.map((r) => (
+                    <button
+                      key={r.id}
+                      onClick={() => switchRole(r.id)}
+                      className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between transition ${
+                        currentUser.assignedRoles.includes(r.id)
+                          ? "bg-secondary text-black font-bold"
+                          : "text-neutral-300 hover:bg-white/5"
+                      }`}
+                    >
+                      <span>{r.name}</span>
+                      {currentUser.assignedRoles.includes(r.id) && (
+                        <CheckCircle2 className="size-3.5" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Navigation Links */}
             <nav className="space-y-1.5 pt-2">
-              {navItems
-                .filter((item) => item.visible)
-                .map((item) => {
-                  const isActive = pathname === item.href;
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition group ${
-                        isActive
-                          ? "bg-secondary text-black font-semibold shadow-md"
-                          : "text-neutral-300 hover:bg-white/5 hover:text-white"
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon className={`size-4.5 ${isActive ? "text-black" : "text-neutral-400 group-hover:text-secondary"}`} />
-                        <span>{item.label}</span>
-                      </div>
-                      {item.badge && (
-                        <span
-                          className={`text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                            isActive
-                              ? "bg-black/20 text-black font-bold"
-                              : "bg-white/10 text-neutral-400"
-                          }`}
-                        >
-                          {item.badge}
-                        </span>
-                      )}
-                    </Link>
-                  );
-                })}
+              <p className="text-[10px] uppercase font-semibold tracking-wider text-neutral-400 mb-2 px-3">
+                Modules & Studios
+              </p>
+              {navItems.filter((i) => i.show).map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium transition ${
+                      isActive
+                        ? "bg-secondary text-black font-bold shadow-lg shadow-secondary/15"
+                        : "text-neutral-300 hover:bg-white/5 hover:text-white"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="size-4 shrink-0" />
+                      <span>{item.label}</span>
+                    </div>
+                    {item.badge && (
+                      <span className={`text-[9px] uppercase font-bold px-2 py-0.5 rounded-full ${
+                        isActive ? "bg-black/20 text-black" : "bg-white/10 text-secondary"
+                      }`}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 
-          {/* Footer Back to Site */}
-          <div className="pt-6 border-t border-white/10 space-y-3">
-            <Link
-              href="/"
-              className="flex items-center gap-2.5 text-xs text-neutral-400 hover:text-secondary transition px-3 py-2 rounded-xl hover:bg-white/5"
-            >
-              <ArrowLeft className="size-4" />
-              <span>Back to Public Website</span>
-            </Link>
+          {/* User profile footer */}
+          <div className="pt-6 border-t border-white/10 flex items-center gap-3">
+            <div className="size-9 rounded-full bg-secondary/20 flex items-center justify-center font-bold text-secondary text-xs">
+              {currentUser.name.charAt(0)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
+              <p className="text-[10px] text-neutral-400 truncate">{currentUser.email}</p>
+            </div>
           </div>
         </aside>
 
-        {/* Main Content Viewport */}
-        <main className="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto max-w-7xl mx-auto w-full">
-          {children}
-        </main>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+          <main className="flex-1 p-8 sm:p-12 max-w-7xl w-full mx-auto">
+            {children}
+          </main>
+        </div>
       </div>
     </AdminContext.Provider>
   );

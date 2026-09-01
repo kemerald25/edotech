@@ -1,53 +1,59 @@
 import { NextResponse } from "next/server";
-import { createMembership } from "@/lib/data-store";
-import { submitHubspotFormPayload } from "@/lib/hubspot";
+import { registerMembership } from "@/lib/data-store";
+import { submitHubSpotForm } from "@/lib/hubspot";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { fullName, email, phone, discipline, hubLocation, portfolioUrl, interests } = body;
-
-    if (!fullName || !email || !discipline) {
-      return NextResponse.json(
-        { success: false, error: "Missing required fields: fullName, email, discipline" },
-        { status: 400 },
-      );
-    }
-
-    // 1. Record membership in dynamic database store
-    const membership = createMembership({
+    const {
       fullName,
       email,
       phone,
       discipline,
-      hubLocation: hubLocation || "Benin City Hub",
+      hubLocation,
       portfolioUrl,
+      interests,
+    } = body;
+
+    if (!fullName || !email || !discipline) {
+      return NextResponse.json(
+        { success: false, error: "Missing required fields: fullName, email, or discipline" },
+        { status: 400 }
+      );
+    }
+
+    // 1. Record membership in local data store / DB
+    const member = registerMembership({
+      fullName,
+      email,
+      phone: phone || "",
+      discipline,
+      hubLocation: hubLocation || "Benin City Hub",
+      portfolioUrl: portfolioUrl || "",
       interests: interests || [],
+      status: "active",
     });
 
-    // 2. Sync member profile to HubSpot CRM API
-    const nameParts = fullName.trim().split(" ");
-    const firstname = nameParts[0] || fullName;
-    const lastname = nameParts.slice(1).join(" ");
-
-    await submitHubspotFormPayload({
-      firstname,
-      lastname,
+    // 2. Sync to HubSpot Portal (27244747) Form (5c746a65-8833-4de3-beec-03dce910dacf)
+    await submitHubSpotForm({
       email,
-      phone,
-      discipline,
-      interest: `Membership Application · Hub: ${hubLocation || "Benin City"} · Portfolio: ${portfolioUrl || "N/A"}`,
+      firstname: fullName.split(" ")[0] || fullName,
+      lastname: fullName.split(" ").slice(1).join(" ") || "",
+      phone: phone || "",
+      jobtitle: discipline,
+      message: `Joined Edo Tech Guild. Hub: ${hubLocation || "Benin City Hub"}. Interests: ${(interests || []).join(", ")}. Portfolio: ${portfolioUrl || "N/A"}`,
     });
 
     return NextResponse.json({
       success: true,
-      membership,
-      message: "Membership submitted successfully! Welcome to Edo Tech Community.",
+      member,
+      message: "Membership application recorded and synced to HubSpot successfully.",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Internal Server Error";
     return NextResponse.json(
-      { success: false, error: error.message || "Failed to process membership application" },
-      { status: 500 },
+      { success: false, error: message },
+      { status: 500 }
     );
   }
 }

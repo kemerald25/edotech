@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { UploadCloud, CheckCircle2, Image as ImageIcon, Loader2 } from "lucide-react";
+import { UploadCloud, CheckCircle2, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 interface ImageUploaderProps {

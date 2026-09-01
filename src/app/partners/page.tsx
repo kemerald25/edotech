@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { PartnerTestimonials } from "@/components/partners/partner-testimonials";
-import { ExternalLink, Sparkles, Handshake, ArrowRight } from "lucide-react";
+import { ExternalLink, Sparkles } from "lucide-react";
 
 export const metadata = {
   title: "Partners | Edo Tech Community",

@@ -1,6 +1,6 @@
 import { CustomRegistrationForm } from "@/components/forms/custom-registration-form";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { CheckCircle2, Quote, Sparkles, Shield, Building, Award, Users } from "lucide-react";
+import { Quote, Sparkles, Shield, Building, Award, Users } from "lucide-react";
 import Image from "next/image";
 
 export const metadata = {

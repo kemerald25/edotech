@@ -10,10 +10,8 @@ import {
   MapPin,
   Video,
   Download,
-  Search,
   CheckCircle2,
   Sparkles,
-  ExternalLink,
   X,
 } from "lucide-react";
 import { PlatformEvent, EventRegistration } from "@/lib/data-store";
@@ -431,7 +429,7 @@ export default function EventsAdminPage() {
                   </label>
                   <select
                     value={category}
-                    onChange={(e: any) => setCategory(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value as PlatformEvent["category"])}
                     className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-xs text-white focus:border-secondary focus:outline-none"
                   >
                     <option value="Product Studio">Product Studio</option>
@@ -463,7 +461,7 @@ export default function EventsAdminPage() {
                   </label>
                   <select
                     value={locationType}
-                    onChange={(e: any) => setLocationType(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setLocationType(e.target.value as "physical" | "virtual" | "hybrid")}
                     className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-xs text-white focus:border-secondary focus:outline-none"
                   >
                     <option value="hybrid">Hybrid (Physical Hub + Virtual)</option>

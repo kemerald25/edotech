@@ -1,7 +1,5 @@
-import { SectionHeading } from "@/components/ui/section-heading";
 import { TeamTabs } from "@/components/teams/team-tabs";
-import { Sparkles, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { Sparkles } from "lucide-react";
 
 export const metadata = {
   title: "Teams | Edo Tech Community",

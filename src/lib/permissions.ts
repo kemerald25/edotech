@@ -18,6 +18,9 @@ export type PermissionKey =
   | "roles.manage"
   | "users.manage";
 
+export type PermissionId = PermissionKey;
+export type RoleId = string;
+
 export interface PermissionDefinition {
   id: PermissionKey;
   name: string;
@@ -136,6 +139,9 @@ export const SYSTEM_PERMISSIONS: PermissionDefinition[] = [
   },
 ];
 
+export const ALL_PERMISSIONS = SYSTEM_PERMISSIONS;
+export const SYSTEM_PERMISSIONS_CATALOG = SYSTEM_PERMISSIONS;
+
 export interface Role {
   id: string;
   name: string;
@@ -151,6 +157,7 @@ export interface AdminUser {
   email: string;
   roleId: string;
   roleName: string;
+  assignedRoles: string[];
   avatarUrl?: string;
   status: "active" | "invited" | "suspended";
 }
@@ -210,6 +217,7 @@ export const INITIAL_ADMIN_USERS: AdminUser[] = [
     email: "daniel@edotech.community",
     roleId: "super_admin",
     roleName: "Super Admin / Executive",
+    assignedRoles: ["super_admin"],
     avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
     status: "active",
   },
@@ -219,6 +227,7 @@ export const INITIAL_ADMIN_USERS: AdminUser[] = [
     email: "emmanuel@edotech.community",
     roleId: "event_manager",
     roleName: "Volunteer Event Manager",
+    assignedRoles: ["event_manager"],
     avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
     status: "active",
   },
@@ -228,25 +237,38 @@ export const INITIAL_ADMIN_USERS: AdminUser[] = [
     email: "amarachi@edotech.community",
     roleId: "writer",
     roleName: "Volunteer Writer / Editor",
+    assignedRoles: ["writer"],
     avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
     status: "active",
   },
 ];
 
 export function hasPermission(
-  userRole: Role | undefined,
+  userRoles: string[] | Role | undefined,
   requiredPermission: PermissionKey,
 ): boolean {
-  if (!userRole) return false;
-  if (userRole.id === "super_admin") return true;
-  return userRole.permissions.includes(requiredPermission);
+  if (!userRoles) return false;
+  if (Array.isArray(userRoles)) {
+    if (userRoles.includes("super_admin")) return true;
+    const matchingRoles = INITIAL_ROLES.filter((r) => userRoles.includes(r.id));
+    return matchingRoles.some((r) => r.permissions.includes(requiredPermission));
+  }
+  if (userRoles.id === "super_admin") return true;
+  return userRoles.permissions.includes(requiredPermission);
 }
 
 export function hasAnyPermission(
-  userRole: Role | undefined,
+  userRoles: string[] | Role | undefined,
   requiredPermissions: PermissionKey[],
 ): boolean {
-  if (!userRole) return false;
-  if (userRole.id === "super_admin") return true;
-  return requiredPermissions.some((perm) => userRole.permissions.includes(perm));
+  if (!userRoles) return false;
+  if (Array.isArray(userRoles)) {
+    if (userRoles.includes("super_admin")) return true;
+    const matchingRoles = INITIAL_ROLES.filter((r) => userRoles.includes(r.id));
+    return matchingRoles.some((r) =>
+      r.permissions.some((perm) => requiredPermissions.includes(perm))
+    );
+  }
+  if (userRoles.id === "super_admin") return true;
+  return requiredPermissions.some((perm) => userRoles.permissions.includes(perm));
 }

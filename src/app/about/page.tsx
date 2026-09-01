@@ -4,7 +4,7 @@ import { AnimatedCounter } from "@/components/animated-counter";
 import { TeamTabs } from "@/components/teams/team-tabs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Sparkles, Compass, Shield, Users, Layers } from "lucide-react";
+import { Sparkles, Users, Layers, LucideIcon } from "lucide-react";
 
 export const metadata = {
   title: "About Us | Edo Tech Community",
@@ -12,7 +12,7 @@ export const metadata = {
     "Vision, mission, history time-tree, and team directory for the Edo Tech Community.",
 };
 
-const valueIcons: Record<string, any> = {
+const valueIcons: Record<string, LucideIcon> = {
   Sparkles,
   Users,
   Layers,

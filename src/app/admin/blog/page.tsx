@@ -6,13 +6,8 @@ import {
   Plus,
   Edit2,
   Trash2,
-  Eye,
   CheckCircle2,
-  Clock,
-  Tag,
-  ExternalLink,
   X,
-  Sparkles,
 } from "lucide-react";
 import { DynamicBlogPost } from "@/lib/data-store";
 import { ImageUploader } from "@/components/admin/image-uploader";
@@ -221,7 +216,7 @@ export default function BlogAdminPage() {
                 {can("blog.edit") && (
                   <button
                     onClick={() => handleOpenEdit(post)}
-                    className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 transition"
+                    className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 transition cursor-pointer"
                     title="Edit article"
                   >
                     <Edit2 className="size-3.5" />
@@ -230,7 +225,7 @@ export default function BlogAdminPage() {
                 {can("blog.delete") && (
                   <button
                     onClick={() => handleDeletePost(post.id, post.title)}
-                    className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition"
+                    className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 transition cursor-pointer"
                     title="Delete article"
                   >
                     <Trash2 className="size-3.5" />

@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { teamMembers } from "@/data/site-data";
-import { TeamMember } from "@/types/content";
-import { Users, Shield, Sparkles, Code, Palette, Heart } from "lucide-react";
+import { Users, Shield, Code } from "lucide-react";
 
 const roleCategories = [
   { id: "all", label: "All Members", icon: Users },

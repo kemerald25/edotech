@@ -64,8 +64,9 @@ export function CustomRegistrationForm() {
       } else {
         setError(data.error || "Failed to submit membership application.");
       }
-    } catch (err: any) {
-      setError(err.message || "Network error. Please try again.");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Network error. Please try again.";
+      setError(message);
     } finally {
       setLoading(false);
     }

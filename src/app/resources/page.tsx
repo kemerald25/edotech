@@ -1,7 +1,7 @@
 import { resources, communityProjects } from "@/data/site-data";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ResourceSubmissionForm } from "@/components/resources/resource-submission-form";
-import { Library, Users, Sparkles } from "lucide-react";
+import { Users, Sparkles } from "lucide-react";
 import { ResourceTabs } from "@/components/resources/resource-tabs";
 
 export const metadata = {

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { AnimatedCounter } from "@/components/animated-counter";
 import { missionStats, programs } from "@/data/site-data";
-import { getFeaturedNextEvent, getAllEvents } from "@/lib/data-store";
+import { getFeaturedNextEvent } from "@/lib/data-store";
 import { getFeaturedPosts } from "@/lib/mdx";
 import { NewsletterForm } from "@/components/forms/newsletter-form";
 import Link from "next/link";

@@ -6,9 +6,6 @@ import {
   Search,
   CheckCircle2,
   MapPin,
-  ExternalLink,
-  ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { MembershipRecord, getAllMemberships } from "@/lib/data-store";
 

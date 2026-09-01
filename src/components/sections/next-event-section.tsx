@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { PlatformEvent } from "@/lib/data-store";
 import { EventRegistrationModal } from "@/components/programs/event-registration-modal";
-import { Calendar, MapPin, Sparkles, ArrowRight, Users, Video } from "lucide-react";
+import { Calendar, MapPin, Sparkles, ArrowRight } from "lucide-react";
 import Image from "next/image";
 
 interface NextEventSectionProps {
