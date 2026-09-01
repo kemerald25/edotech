@@ -1,11 +1,11 @@
 import { resources, communityProjects } from "@/data/site-data";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ResourceSubmissionForm } from "@/components/resources/resource-submission-form";
-import { Library, Users } from "lucide-react";
+import { Library, Users, Sparkles } from "lucide-react";
 import { ResourceTabs } from "@/components/resources/resource-tabs";
 
 export const metadata = {
-  title: "Resources",
+  title: "Resources | Edo Tech Community",
   description:
     "Searchable resource library with docs, datasets, tutorials, and contribution workflows.",
 };
@@ -14,76 +14,72 @@ export default function ResourcesPage() {
   const communityContributions = resources.filter((item) => item.contributor);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-12 px-6 py-16">
-      <section className="rounded-[32px] border border-white/10 bg-white/5 p-10">
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-secondary">
-              Library
-            </p>
-            <h1 className="mt-4 font-heading text-4xl font-semibold">
-              Downloadable toolkits and open resources
-            </h1>
-            <p className="mt-3 text-neutral-300">
-              Markdown docs, datasets, and playbooks that power Edo Tech
-              activations. Everything ships via Markdown so updates are a PR away.
-            </p>
-          </div>
-          <div className="rounded-3xl border border-white/10 bg-black/40 p-6 text-sm text-neutral-300">
-            <p className="flex items-center gap-2 text-secondary">
-              <Library className="size-4" />
-              Always-on curation
-            </p>
-            <p className="mt-2">
-              Resources are generated staticly at build time. Add a new file under
-              <code className="ml-1 rounded bg-black/60 px-2 py-1 text-xs text-white">
-                src/data/site-data.ts
-              </code>{" "}
-              or submit via the form below.
-            </p>
-          </div>
+    <div className="mx-auto max-w-6xl space-y-24 md:space-y-32 px-6 py-12 md:py-20">
+      {/* 1. HERO HEADER */}
+      <section className="relative pt-6 max-w-3xl space-y-6">
+        <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-secondary">
+          <Sparkles className="size-3.5" />
+          <span>Open Knowledge Commons</span>
+        </div>
+
+        <h1 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight text-white leading-tight">
+          Toolkits, open datasets, and community playbooks.
+        </h1>
+
+        <p className="text-lg sm:text-xl text-neutral-300 leading-relaxed">
+          Open-source resources, playbooks, and municipal datasets that power Edo Tech activations.
+        </p>
+      </section>
+
+      {/* 2. RESOURCE EXPLORER */}
+      <section className="space-y-12">
+        <SectionHeading
+          eyebrow="Library"
+          title="Search, filter, and download"
+          description="Browse documentation, playbooks, and open-source civic projects built by Edo creators."
+        />
+        <ResourceTabs resources={resources} projects={communityProjects} />
+      </section>
+
+      {/* 3. COMMUNITY CONTRIBUTIONS */}
+      <section className="space-y-12">
+        <SectionHeading
+          eyebrow="Community"
+          title="Featured contributions"
+          description="Open-source spirit means everyone can drop knowledge for the next cohort."
+        />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {communityContributions.map((item) => (
+            <article
+              key={item.title}
+              className="rounded-3xl border border-white/10 bg-white/5 p-8 flex flex-col justify-between space-y-4 shadow-lg transition hover:border-secondary/50"
+            >
+              <div className="space-y-2">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-secondary bg-secondary/10 px-2.5 py-1 rounded-full">
+                  {item.category}
+                </span>
+                <h3 className="text-xl font-bold text-white font-heading">{item.title}</h3>
+                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">{item.description}</p>
+              </div>
+
+              <p className="pt-4 border-t border-white/10 inline-flex items-center gap-2 text-xs uppercase tracking-wider text-neutral-400 font-semibold">
+                <Users className="size-4 text-secondary" />
+                <span>{item.contributor}</span>
+              </p>
+            </article>
+          ))}
         </div>
       </section>
 
-      <SectionHeading
-        eyebrow="Explore"
-        title="Search, filter, and download"
-        description="Toggle between living docs and Edo-built showcase projects."
-      />
-      <ResourceTabs resources={resources} projects={communityProjects} />
-
-      <SectionHeading
-        eyebrow="Community"
-        title="Featured contributions"
-        description="Open-source spirit means everyone can drop knowledge for the next cohort."
-      />
-      <div className="grid gap-6 md:grid-cols-3">
-        {communityContributions.map((item) => (
-          <article
-            key={item.title}
-            className="rounded-3xl border border-white/10 bg-gradient-to-br from-primary/20 via-background to-background p-6"
-          >
-            <p className="text-xs uppercase tracking-[0.35em] text-secondary/70">
-              {item.category}
-            </p>
-            <h3 className="mt-2 text-xl font-semibold">{item.title}</h3>
-            <p className="mt-2 text-sm text-neutral-300">{item.description}</p>
-            <p className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-neutral-400">
-              <Users className="size-4" />
-              {item.contributor}
-            </p>
-          </article>
-        ))}
-      </div>
-
-      <SectionHeading
-        eyebrow="Submit"
-        title="Share a resource"
-        description="No-code submission form for new docs, tutorials, or tooling."
-      />
-      <ResourceSubmissionForm />
+      {/* 4. SUBMISSION FORM */}
+      <section className="rounded-[36px] border border-white/10 bg-gradient-to-br from-white/5 via-background to-background p-8 sm:p-12 space-y-8">
+        <SectionHeading
+          eyebrow="Contribute"
+          title="Share an open resource"
+          description="Submit a dataset, tutorial, or tooling repository for review by our maintainers."
+        />
+        <ResourceSubmissionForm />
+      </section>
     </div>
   );
 }
-
-

@@ -35,6 +35,11 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
   },
+  icons: {
+    icon: "/favico.svg",
+    shortcut: "/favico.svg",
+    apple: "/favico.svg",
+  },
   alternates: {
     canonical: siteConfig.url,
   },

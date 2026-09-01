@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Shield } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,7 +10,6 @@ import Image from "next/image";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/teams", label: "Teams" },
   { href: "/programs", label: "Programs" },
   { href: "/partners", label: "Partners" },
   { href: "/blog", label: "Blog" },
@@ -28,6 +27,11 @@ export function SiteHeader() {
     window.addEventListener("scroll", handler);
     return () => window.removeEventListener("scroll", handler);
   }, []);
+
+  // Hide public header on admin pages to provide full screen admin experience
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <header
@@ -65,10 +69,17 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-3">
           <Link
-            href="/join"
-            className="hidden md:block rounded-full bg-secondary px-4 py-2 text-background shadow-glow transition hover:-translate-y-0.5"
+            href="/admin"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-neutral-300 transition"
           >
-            Join the Network
+            <Shield className="size-3 text-secondary" />
+            <span>Admin</span>
+          </Link>
+          <Link
+            href="/join"
+            className="hidden md:block rounded-full bg-secondary px-5 py-2 text-sm font-bold text-background shadow-glow transition hover:-translate-y-0.5"
+          >
+            Join the Guild
           </Link>
           <button
             className="focus-ring rounded-full border border-white/10 p-2 lg:hidden"
@@ -103,11 +114,19 @@ export function SiteHeader() {
               </Link>
             ))}
             <Link
-              href="/join"
-              className="rounded-2xl bg-secondary px-4 py-3 text-center font-semibold text-background shadow-glow"
+              href="/admin"
+              className="flex items-center gap-2 rounded-xl px-3 py-2 text-neutral-300 hover:bg-white/5"
               onClick={() => setOpen(false)}
             >
-              Join the Network
+              <Shield className="size-4 text-secondary" />
+              <span>Admin Portal</span>
+            </Link>
+            <Link
+              href="/join"
+              className="rounded-2xl bg-secondary px-4 py-3 text-center font-bold text-background shadow-glow"
+              onClick={() => setOpen(false)}
+            >
+              Join the Guild
             </Link>
           </nav>
         </div>

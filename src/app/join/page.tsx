@@ -1,129 +1,201 @@
-import { HubspotForm } from "@/components/forms/hubspot-form";
-import { CheckCircle2, ShieldCheck, Sparkles } from "lucide-react";
-
-const joiningBenefits = [
-  "Hub access across Benin, Auchi, and remote pods",
-  "Weekly curated jobs, grants, and funding alerts",
-  "Accountability circles to ship your tech roadmap",
-  "Verified builder directory & community perks",
-];
-
-const faqs = [
-  {
-    question: "Is membership free?",
-    answer: "Yes, membership is 100% free with no hidden fees or tiers.",
-  },
-  {
-    question: "What happens after I apply?",
-    answer: "Our membership team will review your application and send your orientation details within 72 hours.",
-  },
-  {
-    question: "Who can join?",
-    answer: "Founders, developers, designers, students, civic leaders, and tech enthusiasts in Edo State or the diaspora.",
-  },
-];
+import { CustomRegistrationForm } from "@/components/forms/custom-registration-form";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { CheckCircle2, Quote, Sparkles, Shield, Building, Award, Users } from "lucide-react";
+import Image from "next/image";
 
 export const metadata = {
   title: "Join Us | Edo Tech Community",
   description:
-    "Join the Edo Tech Community. Connect with tech builders, access hubs, and discover funding opportunities.",
+    "Free membership onboarding, social proof, and community benefits for the Edo Tech Community.",
 };
+
+const memberTestimonials = [
+  {
+    quote:
+      "Joining Edo Tech unlocked a network of hardware mentors that helped us build and launch our clean energy startup in six months.",
+    author: "Efe Osazuwa",
+    role: "Founder, SolGrid Systems",
+    hub: "Benin City Hub",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+    bgImage: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    quote:
+      "The Paty Civic Lab paired our municipal team with product engineers who understood public sector constraints and built fast telemetry pilots.",
+    author: "Mary Asemota",
+    role: "Civic Policy Lead",
+    hub: "Benin City Hub",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+    bgImage: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+  },
+];
+
+const joiningBenefits = [
+  {
+    title: "Hub & Co-Working Access",
+    description: "Work, build, and collaborate from verified tech hubs across Benin City, Auchi, and remote pods.",
+    icon: Building,
+  },
+  {
+    title: "Weekly Curated Alerts",
+    description: "Receive priority notifications for verified jobs, grants, hackathons, and venture capital funding.",
+    icon: Award,
+  },
+  {
+    title: "Accountability Build Circles",
+    description: "Join weekly sprint circles with senior peers to keep your product roadmap shipping on time.",
+    icon: Users,
+  },
+  {
+    title: "Verified Guild Directory",
+    description: "Showcase your portfolio, skill tags, and open-source contributions to regional and global recruiters.",
+    icon: Shield,
+  },
+];
+
+const faqs = [
+  {
+    question: "Is membership really 100% free?",
+    answer: "Yes, membership is completely free. We have no membership dues, fees, or hidden tiers.",
+  },
+  {
+    question: "What happens after I submit the form?",
+    answer: "Your application is processed and synced with our community team. You will receive an invitation to our Discord guild and orientation within 72 hours.",
+  },
+  {
+    question: "Who can join the Edo Tech Community?",
+    answer: "Engineers, product designers, researchers, founders, students, and tech enthusiasts based in Edo State or the diaspora.",
+  },
+  {
+    question: "Can I participate remotely if I am outside Benin City?",
+    answer: "Yes! All our Paty sprints, community demo days, and accountability circles have hybrid and virtual tracks.",
+  },
+];
 
 export default function JoinPage() {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12 lg:py-20 space-y-16">
-      {/* Hero Header */}
-      <div className="max-w-3xl space-y-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3.5 py-1 text-xs font-medium text-secondary">
+    <div className="mx-auto max-w-6xl space-y-24 md:space-y-32 px-6 py-12 md:py-20">
+      {/* 1. HERO HEADER */}
+      <section className="relative pt-6 max-w-3xl space-y-6">
+        <div className="inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-secondary">
           <Sparkles className="size-3.5" />
-          <span>Free Membership</span>
+          <span>Membership Onboarding</span>
         </div>
-        <h1 className="font-heading text-4xl sm:text-5xl font-bold tracking-tight text-white">
-          Join the Edo Tech Community
+
+        <h1 className="font-heading text-4xl sm:text-6xl font-bold tracking-tight text-white leading-tight">
+          Join a guild of builders shaping Edo&apos;s digital future.
         </h1>
-        <p className="text-lg text-neutral-300 leading-relaxed">
-          Connect with developers, founders, and innovators shaping Edo State&apos;s tech ecosystem.
-          Gain instant access to hubs, mentorship, and opportunities.
+
+        <p className="text-lg sm:text-xl text-neutral-300 leading-relaxed">
+          Connect with over 2,600 technologists, founders, and civic innovators. Gain access to physical hubs, mentorship circles, and curated funding opportunities.
         </p>
-      </div>
+      </section>
 
-      {/* Main Content Layout */}
-      <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
-        {/* Left Column: Benefits & FAQs */}
-        <div className="lg:col-span-6 space-y-10">
-          {/* Key Benefits */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-white">Why join us?</h2>
-            <ul className="space-y-3">
-              {joiningBenefits.map((benefit) => (
-                <li key={benefit} className="flex items-start gap-3 text-neutral-200">
-                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-secondary" />
-                  <span className="text-sm sm:text-base">{benefit}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+      {/* 2. STEP 1: SOCIAL PROOF & TESTIMONIALS (With Visual Cards) */}
+      <section className="space-y-8">
+        <SectionHeading
+          eyebrow="Community Voices"
+          title="Built with and for technologists"
+          description="Hear from community members who have launched startups and civic labs through the guild."
+        />
 
-          {/* Social Proof Quote */}
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 relative">
-            <p className="text-sm italic text-neutral-300 leading-relaxed">
-              &ldquo;Joining Edo Tech unlocked a network of mentors and partners that helped us launch our hardware startup in six months.&rdquo;
-            </p>
-            <div className="mt-4 flex items-center gap-3">
-              <div className="size-8 rounded-full bg-secondary/20 flex items-center justify-center font-bold text-xs text-secondary">
-                EO
+        <div className="grid gap-8 md:grid-cols-2">
+          {memberTestimonials.map((item) => (
+            <div
+              key={item.author}
+              className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-black/40 p-8 sm:p-10 flex flex-col justify-between space-y-8 shadow-2xl transition hover:border-secondary/40"
+            >
+              {/* Background ambient image overlay */}
+              <div className="absolute inset-0 opacity-15 transition-opacity duration-500 group-hover:opacity-25">
+                <Image src={item.bgImage} alt="" fill className="object-cover" />
               </div>
-              <div>
-                <p className="text-xs font-semibold text-white">Efe Osazuwa</p>
-                <p className="text-[11px] text-neutral-400">Founder, SolGrid</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/80 to-transparent" />
+
+              <div className="relative z-10 space-y-4">
+                <Quote className="size-8 text-secondary/70" />
+                <p className="text-base sm:text-lg italic text-neutral-200 leading-relaxed">
+                  &ldquo;{item.quote}&rdquo;
+                </p>
+              </div>
+
+              <div className="relative z-10 flex items-center gap-4 pt-4 border-t border-white/10">
+                <div className="size-12 rounded-full overflow-hidden border border-secondary/40 relative">
+                  <Image src={item.avatar} alt={item.author} fill className="object-cover" />
+                </div>
+                <div>
+                  <h4 className="text-base font-bold text-white font-heading">{item.author}</h4>
+                  <p className="text-xs text-secondary font-medium">{item.role}</p>
+                  <p className="text-[11px] text-neutral-400">{item.hub}</p>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
+        </div>
+      </section>
 
-          {/* FAQ Accordion */}
-          <div className="space-y-4 pt-4 border-t border-white/10">
-            <h2 className="text-lg font-semibold text-white">Frequently Asked Questions</h2>
-            <div className="space-y-3">
-              {faqs.map((faq) => (
-                <details
-                  key={faq.question}
-                  className="group rounded-xl border border-white/10 bg-white/5 p-4 [&_summary::-webkit-details-marker]:hidden"
-                >
-                  <summary className="flex cursor-pointer items-center justify-between font-medium text-white text-sm">
-                    {faq.question}
-                    <span className="ml-2 text-neutral-400 group-open:rotate-180 transition-transform">
-                      ↓
-                    </span>
-                  </summary>
-                  <p className="mt-2 text-xs text-neutral-300 leading-relaxed">
-                    {faq.answer}
+      {/* 3. STEP 2: NATIVE CUSTOM REGISTRATION FORM */}
+      <section className="space-y-6">
+        <CustomRegistrationForm />
+      </section>
+
+      {/* 4. STEP 3: DETAILED CONTENT & BENEFITS */}
+      <section className="space-y-12">
+        <SectionHeading
+          eyebrow="Perks & Access"
+          title="What every member unlocks"
+          description="One guild, shared benefits. Here is how we support your journey as a builder."
+        />
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {joiningBenefits.map((benefit) => {
+            const Icon = benefit.icon;
+            return (
+              <div
+                key={benefit.title}
+                className="rounded-3xl border border-white/10 bg-white/5 p-8 space-y-4 transition hover:-translate-y-1 hover:border-secondary/50 shadow-lg flex flex-col justify-between"
+              >
+                <div className="size-12 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
+                  <Icon className="size-6" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-bold text-white font-heading">{benefit.title}</h3>
+                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed">
+                    {benefit.description}
                   </p>
-                </details>
-              ))}
-            </div>
-          </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
+      </section>
 
-        {/* Right Column: HubSpot Form Card */}
-        <div className="lg:col-span-6">
-          <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.02] backdrop-blur-sm p-6 sm:p-8 space-y-6 shadow-2xl">
-            <div className="space-y-1">
-              <h2 className="text-2xl font-bold text-white font-heading">Complete Registration</h2>
-              <p className="text-xs text-neutral-400">Fill in your details below to get started.</p>
-            </div>
+      {/* 5. STEP 4: INTERACTIVE FAQS */}
+      <section className="space-y-8">
+        <SectionHeading
+          eyebrow="FAQ"
+          title="Frequently asked questions"
+          description="Clear answers before you complete your membership application."
+        />
 
-            <HubspotForm />
-
-            <div className="pt-2 border-t border-white/10 flex items-center gap-2 text-xs text-neutral-400">
-              <ShieldCheck className="size-4 text-secondary shrink-0" />
-              <span>100% free • No spam • Privacy protected</span>
-            </div>
-          </div>
+        <div className="space-y-4 max-w-4xl">
+          {faqs.map((faq) => (
+            <details
+              key={faq.question}
+              className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:border-white/20 [&_summary::-webkit-details-marker]:hidden"
+            >
+              <summary className="flex cursor-pointer items-center justify-between font-semibold text-white text-base sm:text-lg">
+                {faq.question}
+                <span className="ml-4 text-secondary group-open:rotate-180 transition-transform font-mono text-sm">
+                  ↓
+                </span>
+              </summary>
+              <p className="mt-4 text-sm text-neutral-300 leading-relaxed pt-2 border-t border-white/5">
+                {faq.answer}
+              </p>
+            </details>
+          ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }
-
-
-
