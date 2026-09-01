@@ -98,7 +98,7 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
           firstName,
           lastName,
           email,
-          phone: phone.startsWith("+") ? phone : `+234${phone.replace(/^0+/, "")}`,
+          phone: phone.trim(),
           bio,
           location,
           birthday,
@@ -240,18 +240,16 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
             <label className="block text-neutral-300 font-semibold mb-1.5 uppercase tracking-wider">
               Phone Number<span className="text-secondary ml-0.5">*</span>
             </label>
-            <p className="text-[10px] text-neutral-400 mb-1">WhatsApp number preferred (Nigeria +234)</p>
+            <p className="text-[10px] text-neutral-400 mb-1">WhatsApp number preferred (e.g. +234, +1, +44)</p>
             <div className="relative">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 font-mono text-xs">
-                +234
-              </span>
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-neutral-500" />
               <input
                 type="tel"
                 required
-                placeholder="801 234 5678"
+                placeholder="+234 801 234 5678"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-black/40 pl-16 pr-4 py-3 text-sm text-white placeholder-neutral-500 focus:border-secondary focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-black/40 pl-10 pr-4 py-3 text-sm text-white placeholder-neutral-500 focus:border-secondary focus:outline-none"
               />
             </div>
           </div>
@@ -503,12 +501,12 @@ export function CustomRegistrationForm({ onSuccess }: RegistrationFormProps) {
             className="w-full rounded-xl border border-white/10 bg-black/60 px-3.5 py-3 text-xs text-white focus:border-secondary focus:outline-none"
           >
             <option value="">Please Select</option>
-            <option value="Early Stage Learner / Student">Early Stage Learner / Student</option>
-            <option value="Mid-level Tech Professional">Mid-level Tech Professional</option>
-            <option value="Senior Tech Leader / Executive">Senior Tech Leader / Executive</option>
-            <option value="Startup Founder / Co-founder">Startup Founder / Co-founder</option>
-            <option value="Ecosystem Partner / Investor">Ecosystem Partner / Investor</option>
-            <option value="Freelancer / Consultant">Freelancer / Consultant</option>
+            <option value="Founder: You have launched a startup">Founder: You have launched a startup</option>
+            <option value="Investor: You fund startups">Investor: You fund startups</option>
+            <option value="Operator: You lead a team at a startup">Operator: You lead a team at a startup</option>
+            <option value="Mentor: You train talents and/or founders">Mentor: You train talents and/or founders</option>
+            <option value="Talent: You're on the team in a startup">Talent: You&apos;re on the team in a startup</option>
+            <option value="Newbie: You're just getting into tech and haven't found a place yet">Newbie: You&apos;re just getting into tech and haven&apos;t found a place yet</option>
           </select>
         </div>
 
