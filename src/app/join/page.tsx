@@ -1,7 +1,6 @@
 import { CustomRegistrationForm } from "@/components/forms/custom-registration-form";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { Quote, Sparkles, Shield, Building, Award, Users } from "lucide-react";
-import Image from "next/image";
+import { Sparkles, Shield, Building, Award, Users } from "lucide-react";
 
 export const metadata = {
   title: "Join Us | Edo Tech Community",
@@ -9,6 +8,8 @@ export const metadata = {
     "Free membership onboarding and instant WhatsApp community access for Edo State technologists.",
 };
 
+/*
+// Testimonials commented out until real responses are collected
 const memberTestimonials = [
   {
     quote:
@@ -27,6 +28,7 @@ const memberTestimonials = [
     avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
   },
 ];
+*/
 
 const joiningBenefits = [
   {
@@ -89,7 +91,8 @@ export default function JoinPage() {
         </p>
       </section>
 
-      {/* 2. COMPACT SOCIAL PROOF QUOTES */}
+      {/* 2. TESTIMONIALS (COMMENTED OUT TEMPORARILY) */}
+      {/* 
       <section className="grid gap-4 sm:grid-cols-2 max-w-4xl mx-auto">
         {memberTestimonials.map((item) => (
           <div
@@ -115,6 +118,7 @@ export default function JoinPage() {
           </div>
         ))}
       </section>
+      */}
 
       {/* 3. NATIVE REGISTRATION FORM */}
       <section className="max-w-3xl mx-auto">
