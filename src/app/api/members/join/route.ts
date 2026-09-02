@@ -72,19 +72,23 @@ export async function POST(req: Request) {
       created_at: new Date().toISOString(),
     }], "id");
 
-    // 3. Sync to HubSpot Portal (27244747)
-    await submitHubSpotForm({
+    // 3. Sync directly to HubSpot CRM & Form
+    const hsResult = await submitHubSpotForm({
       email,
       firstname: firstName || resolvedName.split(" ")[0] || resolvedName,
       lastname: lastName || resolvedName.split(" ").slice(1).join(" ") || "",
       phone: phone || "",
       jobtitle: jobTitle || fieldInTech || "Community Member",
+      city: location || "Benin City",
+      company: companyName || "",
+      website: companyWebsite || "",
       message: `Bio: ${bio || "N/A"} | Location: ${location || "Benin City"} | Persona: ${persona || "Member"} | Company: ${companyName || "N/A"} | Founder: ${isFounder ? "Yes" : "No"} | Birthday: ${birthday || "N/A"} | Expectations: ${expectations || "N/A"}`,
     });
 
     return NextResponse.json({
       success: true,
       member,
+      hubspot: hsResult,
       message: "Membership application recorded and synced successfully.",
     });
   } catch (error: unknown) {

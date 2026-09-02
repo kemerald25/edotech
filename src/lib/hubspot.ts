@@ -474,62 +474,125 @@ export async function submitHubSpotForm(payload: {
   lastname?: string;
   phone?: string;
   jobtitle?: string;
+  city?: string;
+  company?: string;
+  website?: string;
   message?: string;
 }) {
   const token = process.env.HUBSPOT_ACCESS_TOKEN;
   let hubspotContactId: string = `hs-${Date.now()}`;
+  let directCrmSuccess = false;
 
   // 1. Direct CRM API Contact Upsert via Private Access Token
   if (token) {
     try {
+      const contactProperties: Record<string, string> = {
+        email: payload.email.trim().toLowerCase(),
+        firstname: payload.firstname.trim(),
+      };
+      if (payload.lastname) contactProperties.lastname = payload.lastname.trim();
+      if (payload.phone) contactProperties.phone = payload.phone.trim();
+      if (payload.jobtitle) contactProperties.jobtitle = payload.jobtitle.trim();
+      if (payload.city) contactProperties.city = payload.city.trim();
+      if (payload.company) contactProperties.company = payload.company.trim();
+      if (payload.website) contactProperties.website = payload.website.trim();
+      contactProperties.lifecyclestage = "lead";
+
       const crmRes = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          properties: {
-            email: payload.email,
-            firstname: payload.firstname,
-            lastname: payload.lastname || "",
-            phone: payload.phone || "",
-            jobtitle: payload.jobtitle || "",
-            lifecyclestage: "lead",
-          },
-        }),
+        body: JSON.stringify({ properties: contactProperties }),
       });
 
       if (crmRes.ok) {
         const crmData = await crmRes.json();
         if (crmData.id) {
           hubspotContactId = crmData.id;
+          directCrmSuccess = true;
         }
       } else if (crmRes.status === 409) {
         // Contact already exists in HubSpot: update existing record
         const updateRes = await fetch(
-          `https://api.hubapi.com/crm/v3/objects/contacts/${encodeURIComponent(payload.email)}?idProperty=email`,
+          `https://api.hubapi.com/crm/v3/objects/contacts/${encodeURIComponent(payload.email.trim().toLowerCase())}?idProperty=email`,
           {
             method: "PATCH",
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              properties: {
-                firstname: payload.firstname,
-                lastname: payload.lastname || "",
-                phone: payload.phone || "",
-                jobtitle: payload.jobtitle || "",
-              },
-            }),
+            body: JSON.stringify({ properties: contactProperties }),
           }
         );
         if (updateRes.ok) {
           const updateData = await updateRes.json();
           if (updateData.id) {
             hubspotContactId = updateData.id;
+            directCrmSuccess = true;
           }
+        } else {
+          const errText = await updateRes.text();
+          console.warn("HubSpot CRM Contact PATCH error:", updateRes.status, errText);
+        }
+      } else {
+        const errText = await crmRes.text();
+        console.warn("HubSpot CRM Contact POST error:", crmRes.status, errText);
+
+        // Fallback retry with minimal core fields
+        const retryRes = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            properties: {
+              email: payload.email.trim().toLowerCase(),
+              firstname: payload.firstname.trim(),
+              lastname: payload.lastname || "",
+            },
+          }),
+        });
+        if (retryRes.ok) {
+          const retryData = await retryRes.json();
+          if (retryData.id) {
+            hubspotContactId = retryData.id;
+            directCrmSuccess = true;
+          }
+        }
+      }
+
+      // Add a timeline Note with full membership onboarding answers if message provided
+      if (payload.message && directCrmSuccess && hubspotContactId && !hubspotContactId.startsWith("hs-")) {
+        try {
+          await fetch("https://api.hubapi.com/crm/v3/objects/notes", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              properties: {
+                hs_timestamp: new Date().toISOString(),
+                hs_note_body: `<h3>Edo Tech Community Application Details</h3><p>${payload.message.replace(/\n/g, "<br/>")}</p>`,
+              },
+              associations: [
+                {
+                  to: { id: hubspotContactId },
+                  types: [
+                    {
+                      associationCategory: "HUBSPOT_DEFINED",
+                      associationTypeId: 202, // Note to Contact
+                    },
+                  ],
+                },
+              ],
+            }),
+          });
+        } catch (noteErr) {
+          console.warn("HubSpot Note association warning:", noteErr);
         }
       }
     } catch (crmErr) {
@@ -537,10 +600,14 @@ export async function submitHubSpotForm(payload: {
     }
   }
 
-  // 2. Also submit to HubSpot Form integration endpoint
+  // 2. Also submit to HubSpot Form integration endpoints
   const portalId = HUBSPOT_PORTAL_ID;
   const formId = HUBSPOT_FORM_ID;
-  const endpoint = `https://api-eu1.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`;
+  const region = HUBSPOT_REGION || "eu1";
+  const formEndpoints = [
+    `https://api-${region}.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`,
+    `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`,
+  ];
 
   const fields = [
     { name: "email", value: payload.email },
@@ -549,22 +616,27 @@ export async function submitHubSpotForm(payload: {
   ];
   if (payload.phone) fields.push({ name: "phone", value: payload.phone });
   if (payload.jobtitle) fields.push({ name: "jobtitle", value: payload.jobtitle });
+  if (payload.company) fields.push({ name: "company", value: payload.company });
+  if (payload.city) fields.push({ name: "city", value: payload.city });
   if (payload.message) fields.push({ name: "message", value: payload.message });
 
-  try {
-    await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fields,
-        context: {
-          pageUri: "https://www.edotech.com.ng/join",
-          pageName: "Edo Tech Community Join",
-        },
-      }),
-    });
-  } catch (formErr) {
-    console.warn("HubSpot Form API fallback warning:", formErr);
+  for (const endpoint of formEndpoints) {
+    try {
+      const formRes = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fields,
+          context: {
+            pageUri: "https://www.edotech.com.ng/join",
+            pageName: "Edo Tech Community Join",
+          },
+        }),
+      });
+      if (formRes.ok) break;
+    } catch (formErr) {
+      console.warn(`HubSpot Form API fallback warning (${endpoint}):`, formErr);
+    }
   }
 
   // 3. Save to Supabase hubspot_contacts table
@@ -576,8 +648,8 @@ export async function submitHubSpotForm(payload: {
     phone: payload.phone || "",
     lifecycleStage: "lead",
     jobTitle: payload.jobtitle || "Community Member",
-    company: "Edo Tech Member",
-    hubLocation: "Benin City",
+    company: payload.company || "Edo Tech Member",
+    hubLocation: payload.city || "Benin City",
     leadSource: "Website Join Form",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -601,7 +673,7 @@ export async function submitHubSpotForm(payload: {
     synced_at: new Date().toISOString(),
   }], "id");
 
-  return { success: true, contactId: hubspotContactId };
+  return { success: true, contactId: hubspotContactId, directCrmSuccess };
 }
 
 // Aliases
